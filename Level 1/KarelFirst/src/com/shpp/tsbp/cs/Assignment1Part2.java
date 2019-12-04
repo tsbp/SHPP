@@ -4,10 +4,8 @@ package com.shpp.tsbp.cs;
 public class Assignment1Part2 extends Assignment1Part1 {
 
     public void run() throws Exception {
-
-        turnLeft();
-        moveUP();
-        turnAround();
+        goToNorth();
+        orientationToSouth();
 
         while(frontIsClear())
         {
@@ -16,19 +14,24 @@ public class Assignment1Part2 extends Assignment1Part1 {
         }
     }
     //==================================================================================================================
-    private void moveUP() throws Exception{
-        while(frontIsClear()) move();
+    private void orientationToSouth()throws  Exception {
+        while (notFacingSouth()) turnLeft();
+    }
+    //==================================================================================================================
+    private void goToNorth() throws Exception {
+        while(notFacingNorth()) turnLeft();
+        while(frontIsClear())   move();
     }
     //==================================================================================================================
     private void moveToNextColumn() throws Exception{
-        turnAround();
-        moveUP();
+
+        goToNorth();
         turnRight();
         
-        if(frontIsClear()) {
+        if(frontIsClear()) {// if not last column
             move();
             while (leftIsClear()) move();
-            turnRight();
+            orientationToSouth();
         }
     }
     //==================================================================================================================
