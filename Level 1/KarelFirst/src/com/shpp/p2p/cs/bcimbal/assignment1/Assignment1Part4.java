@@ -16,7 +16,6 @@ public class Assignment1Part4 extends KarelTheRobot {
 
         while(frontIsClear()) {
             fillLine();
-            turnAround();
             moveBack();
             goToNextColumn();
         }
@@ -37,6 +36,7 @@ public class Assignment1Part4 extends KarelTheRobot {
     // To turn right Karel turns left triple
     //==================================================================================================================
     private void moveBack() throws  Exception{
+        turnAround();
         while (frontIsClear()) move();
     }
 
