@@ -1,7 +1,9 @@
-package com.shpp.tsbp.cs;
+package com.shpp.p2p.cs.bcimbal.assignment1;
 
 
-public class Assignment1Part2 extends Assignment1Part1 {
+import com.shpp.karel.KarelTheRobot;
+
+public class Assignment1Part2 extends KarelTheRobot {
 
     public void run() throws Exception {
         goToNorth();
@@ -42,6 +44,13 @@ public class Assignment1Part2 extends Assignment1Part1 {
             move();
         }
         if(noBeepersPresent()) putBeeper();
-
+    }
+    //==================================================================================================================
+    // To turn right Karel turns left triple
+    //==================================================================================================================
+    private void turnRight() throws Exception{
+        turnLeft();
+        turnLeft();
+        turnLeft();
     }
 }

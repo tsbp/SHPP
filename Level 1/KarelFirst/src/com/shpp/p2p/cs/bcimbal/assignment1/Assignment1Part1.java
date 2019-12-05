@@ -1,5 +1,5 @@
-package com.shpp.tsbp.cs;
-
+//package com.shpp.tsbp.cs;
+package com.shpp.p2p.cs.bcimbal.assignment1;
 
 import com.shpp.karel.KarelTheRobot;
 
@@ -66,7 +66,7 @@ public class Assignment1Part1 extends KarelTheRobot {
     //==================================================================================================================
     // To turn around Karel turns left twice
     //==================================================================================================================
-    public void turnAround() throws Exception{
+    private void turnAround() throws Exception{
         turnLeft();
         turnLeft();
     }
@@ -74,7 +74,7 @@ public class Assignment1Part1 extends KarelTheRobot {
     //==================================================================================================================
     // To turn right Karel turns left triple
     //==================================================================================================================
-    public void turnRight() throws Exception{
+    private void turnRight() throws Exception{
         turnAround();
         turnLeft();
     }
