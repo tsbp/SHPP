@@ -2,18 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e39fdb38-85aa-4408-9fbc-6e4a2b645e5a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/shpp/p2p/cs/bcimbal/assignment1/Assignment1Part3.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/shpp/p2p/cs/bcimbal/assignment1/Assignment1Part4.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/mazes/test.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KarelFirst/com/shpp/tsbp/cs/Assignment1Part1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KarelFirst/com/shpp/tsbp/cs/Assignment1Part2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KarelFirst/com/shpp/tsbp/cs/Karel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/shpp/tsbp/cs/Assignment1Part1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/shpp/p2p/cs/bcimbal/assignment1/Assignment1Part1.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/shpp/tsbp/cs/Assignment1Part2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/shpp/p2p/cs/bcimbal/assignment1/Assignment1Part2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/shpp/tsbp/cs/Assignment1Part3.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/shpp/tsbp/cs/Karel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/shpp/p2p/cs/bcimbal/assignment1/Assignment1Part4.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/shpp/p2p/cs/bcimbal/assignment1/Assignment1Part4.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -154,25 +144,25 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="463" y="126" key="FileChooserDialogImpl/0.0.1366.738@0.0.1366.738" timestamp="1575403532564" />
-    <state width="1877" height="282" key="GridCell.Tab.0.bottom" timestamp="1575558477705">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state width="1323" height="185" key="GridCell.Tab.0.bottom" timestamp="1575571466428">
+      <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="1323" height="182" key="GridCell.Tab.0.bottom/0.0.1366.738@0.0.1366.738" timestamp="1575493481706" />
+    <state width="1323" height="185" key="GridCell.Tab.0.bottom/0.0.1366.738@0.0.1366.738" timestamp="1575571466428" />
     <state width="1877" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1575558477705" />
-    <state width="1877" height="282" key="GridCell.Tab.0.center" timestamp="1575558477705">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state width="1323" height="185" key="GridCell.Tab.0.center" timestamp="1575571466427">
+      <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="1323" height="182" key="GridCell.Tab.0.center/0.0.1366.738@0.0.1366.738" timestamp="1575493481706" />
+    <state width="1323" height="185" key="GridCell.Tab.0.center/0.0.1366.738@0.0.1366.738" timestamp="1575571466427" />
     <state width="1877" height="282" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1575558477705" />
-    <state width="1877" height="282" key="GridCell.Tab.0.left" timestamp="1575558477705">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state width="1323" height="185" key="GridCell.Tab.0.left" timestamp="1575571466427">
+      <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="1323" height="182" key="GridCell.Tab.0.left/0.0.1366.738@0.0.1366.738" timestamp="1575493481705" />
+    <state width="1323" height="185" key="GridCell.Tab.0.left/0.0.1366.738@0.0.1366.738" timestamp="1575571466427" />
     <state width="1877" height="282" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1575558477705" />
-    <state width="1877" height="282" key="GridCell.Tab.0.right" timestamp="1575558477705">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state width="1323" height="185" key="GridCell.Tab.0.right" timestamp="1575571466428">
+      <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="1323" height="182" key="GridCell.Tab.0.right/0.0.1366.738@0.0.1366.738" timestamp="1575493481706" />
+    <state width="1323" height="185" key="GridCell.Tab.0.right/0.0.1366.738@0.0.1366.738" timestamp="1575571466428" />
     <state width="1877" height="282" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1575558477705" />
     <state x="229" y="0" key="SettingsEditor" timestamp="1575554231443">
       <screen x="0" y="0" width="1920" height="1040" />
