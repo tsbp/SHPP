@@ -13,19 +13,20 @@ public class Assignment1Part3 extends KarelTheRobot {
     //==================================================================================================================
     public void run() throws Exception {
 
-        while(noBeepersPresent()) {// if no beppers in current cell, else we found (one of) center cell
+        while(noBeepersPresent()) {                             // if no beppers in current cell, else we found (one of) center cell
             putBeeper();
-            goToOppositSide();    // go to opposite side to
+            goToOppositSide();                                  // go to opposite side to
         }
-        putBeeper();
-        pickAllSingleBeeppers();
+        // at this step all line filled by beepers and we are in the one of center cell of line
+        putBeeper();                                            // put second beeper
+        pickAllSingleBeeppers();                                // pick all single beeppers
     }
 
     //==================================================================================================================
-    //
+    // Karel goes to opposite side of world (in curren row) and puts beeper in empty cel
     //==================================================================================================================
     private void goToOppositSide() throws Exception{
-        if(frontIsClear()) {
+        if(frontIsClear()) {                                        //
             move();
             while (frontIsClear() && noBeepersPresent()) move();
             if (beepersPresent()) {
@@ -38,20 +39,20 @@ public class Assignment1Part3 extends KarelTheRobot {
     }
 
     //==================================================================================================================
-    // Karel picks all single beeppers
+    // Karel picks all single beepers
     //==================================================================================================================
     private void pickAllSingleBeeppers() throws Exception{
-        while(frontIsClear()) move();                                   // go to the wall on current dirrection
+        while(frontIsClear()) move();                                   // go to the wall on current direction
         turnAround();
-        while(frontIsClear()){                                          // while walking to the wall pick single beeppers
+        while(frontIsClear()){                                          // while walking to the wall pick single beepers
             pickBeeper();
             move();
         }
-        pickBeeper();                                                   // pick last beepper
+        pickBeeper();                                                   // pick last beeper
     }
 
     //==================================================================================================================
-    //
+    // To turn around Karel turns left twice
     //==================================================================================================================
     private void turnAround() throws Exception {
         turnLeft();

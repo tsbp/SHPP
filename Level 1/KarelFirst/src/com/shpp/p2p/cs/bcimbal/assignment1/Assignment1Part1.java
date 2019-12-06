@@ -9,15 +9,15 @@ public class Assignment1Part1 extends KarelTheRobot {
     // Karel always walks clockwise around the room along walls to find beeper and start positon(marked by another beeper)
     //==================================================================================================================
     public void run() throws Exception {
-        findDoor();   // finding door and stops behind beeper
-        pickBeeper(); // as written
-        goToOrigin(); // finding beeper that marks original position
+        goToBeeper();   // finding door and stops behind beeper
+        pickBeeper();   // as written
+        goToOrigin();   // finding beeper that marks original position
     }
 
     //==================================================================================================================
     // Karel marks original position (put beeper) and moves from corner to corner to find door
     //==================================================================================================================
-    private void findDoor() throws Exception{
+    private void goToBeeper() throws Exception{
         //----- mark start -------------------------
         putBeeper();                                        // put beeper to find original position
         goToCornerOrDoor();                                 // move to prevent exit in next step
