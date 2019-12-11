@@ -17,11 +17,13 @@ public class Assignment1Part3 extends KarelTheRobot {
 
         while(noBeepersPresent()) {                             // if no beppers in current cell, else we found (one of) center cell
             putBeeper();
-            goToOppositSide();                                  // go to opposite side to
+            if(frontIsClear()){
+                goToOppositSide();                                  // go to opposite side to
+            }
         }
         // at this step all line filled by beepers and we are in the one of center cell of line
-        putBeeper();                                            // put second beeper                    (a. comment this line)
-        pickAllSingleBeeppers();                                // pick all single beeppers             (b. comemnt this line)
+//        putBeeper();                                            // put second beeper                    (a. comment this line)
+//        pickAllSingleBeeppers();                                // pick all single beeppers             (b. comemnt this line)
     }
 
     //==================================================================================================================
@@ -33,7 +35,7 @@ public class Assignment1Part3 extends KarelTheRobot {
 
         while (frontIsClear() && noBeepersPresent()) move();    // move till wall or beeper
         if (beepersPresent()) {                                 // if beeper in current cell make one step back (turn around and move)
-//            pickBeeper();                                     //                                       (c. uncomment this line)
+            pickBeeper();                                     //                                       (c. uncomment this line)
             turnAround();
             move();
         } else {
