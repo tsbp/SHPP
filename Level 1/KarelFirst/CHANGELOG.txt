@@ -1,0 +1,19 @@
+2019-12-12  Bohdan Tsymbal  <tsbp82@gmail.com>
+
+    * Assignment1Part1.java:
+         - codeStyle fixed
+         - algorithm not changed
+
+    * Assignment1Part2.java:
+         - codeStyle fixed
+         - algorithm not changed
+
+    * Assignment1Part3.java:
+         - codeStyle fixed
+         - algorithm improved
+         - bug 1x1 world fixed
+         - method name goToOppositSide() changed to goToOppositeSideAndMoveBeeperToCenter()
+
+    * Assignment1Part4.java:
+         - codeStyle fixed
+         - algorithm not changed

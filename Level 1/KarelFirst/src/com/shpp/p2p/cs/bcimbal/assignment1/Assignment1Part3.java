@@ -1,68 +1,56 @@
+/* Filename: Assignment1Part3.java
+ *
+ * In this program Karel finds center of easter line
+ *
+ */
 package com.shpp.p2p.cs.bcimbal.assignment1;
 
 import com.shpp.karel.KarelTheRobot;
 
 public class Assignment1Part3 extends KarelTheRobot {
 
-    //==================================================================================================================
-    // To solve this problem Karel fills line (height no matter) side by side by beepers
-    // it helps him to find center of line once at the cell where he plans put beeper it already exists
-    // At this cell he puts another beeper (to mark this cell).
-    // And walks all over the line to pick beepers one by one.
-    // As a result he has one beeper in the one (or one of two) center cell
-    //------------------------------------------------------------------------------------------------------------------
-    // to simplify program make (un)comments a,b,c,d
-    //==================================================================================================================
+    /* Precondition: Karel is standing in start position
+     * Result: Karel is standing on beeper in one of the center cells
+     */
     public void run() throws Exception {
-
-        while(noBeepersPresent()) {                             // if no beppers in current cell, else we found (one of) center cell
+        /* Karel put beepers at the ends of line
+         * and moves them to the center
+         */
+        while (noBeepersPresent()) {
             putBeeper();
-            if(frontIsClear()){
-                goToOppositSide();                                  // go to opposite side to
+            if (frontIsClear()) {
+                goToOppositeSideAndMoveBeeperToCenter();
             }
         }
-        // at this step all line filled by beepers and we are in the one of center cell of line
-//        putBeeper();                                            // put second beeper                    (a. comment this line)
-//        pickAllSingleBeeppers();                                // pick all single beeppers             (b. comemnt this line)
     }
 
-    //==================================================================================================================
-    // Karel goes to opposite side of world (in curren row) and puts beeper in empty cel
-    //==================================================================================================================
-    private void goToOppositSide() throws Exception{
-
-        move();                                                 // make one step to execute next stages (staying on beeper)
-
-        while (frontIsClear() && noBeepersPresent()) move();    // move till wall or beeper
-        if (beepersPresent()) {                                 // if beeper in current cell make one step back (turn around and move)
-            pickBeeper();                                     //                                       (c. uncomment this line)
+    /* Precondition: Karel is standing on beeper facing opposite side
+     * Result: Karel is standing on beeper facing opposite side
+     */
+    private void goToOppositeSideAndMoveBeeperToCenter() throws Exception {
+        /* make one step to execute next stages (staying on beeper) */
+        move();
+        /* move till wall or beeper */
+        while (frontIsClear() && noBeepersPresent()) {
+            move();
+        }
+        /* pick beeper to move it to center */
+        if (beepersPresent()) {
+            /* if beeper in current cell pick beeper and make one step back */
+            pickBeeper();
             turnAround();
             move();
         } else {
-            turnAround();                                       // // if wall ahead current cell turn around and move
+            /* if no beeper only turn around*/
+            turnAround();
         }
     }
 
-    //==================================================================================================================
-    // Karel picks all single beepers                                                                    (d. comment method)
-    //==================================================================================================================
-    private void pickAllSingleBeeppers() throws Exception{
-        while(frontIsClear()) move();                                   // go to the wall on current direction
-        turnAround();
-        while(frontIsClear()){                                          // while walking to the wall pick single beepers
-            pickBeeper();
-            move();
-        }
-        pickBeeper();                                                   // pick last beeper
-    }
-
-    //==================================================================================================================
-    // To turn around Karel turns left twice
-    //==================================================================================================================
+    /* Precondition: facing any
+     * Result: facing opposite
+     */
     private void turnAround() throws Exception {
         turnLeft();
         turnLeft();
     }
-    //==================================================================================================================
-
 }

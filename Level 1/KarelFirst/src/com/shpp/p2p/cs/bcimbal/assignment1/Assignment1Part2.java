@@ -1,67 +1,73 @@
+/* Filename: Assignment1Part2.java
+ *
+ * In this program Karel builds columns
+ *
+ */
 package com.shpp.p2p.cs.bcimbal.assignment1;
 
 import com.shpp.karel.KarelTheRobot;
 
 public class Assignment1Part2 extends KarelTheRobot {
 
-    //==================================================================================================================
-    //  Karel fills empty cells in columns from floor to roof
-    //==================================================================================================================
+    /* Precondition: Karel is standing in start position
+     * Result: Karel build all columns
+     */
     public void run() throws Exception {
 
-        while (frontIsClear()) {                        // if not end of the world or wall
-            buildColumn();                              // build column
-            goToNextColumn();                           // go to the next column
+        while (frontIsClear()) {
+            /* while not end of the world build columns*/
+            buildColumn();
+            goToNextColumn();
         }
-        // now we are at the end of the world (wall)
-        buildColumn();                                  // build column before wall
+        /* build last column */
+        buildColumn();
     }
 
-    //==================================================================================================================
-    // go to next column
-    //==================================================================================================================
+    /* Precondition: Karel is standing under roof facing up
+     * Result: Karel on the floor facing east
+     */
     private void goToNextColumn() throws Exception {
-        //---- go down ------------------
         turnAround();
-        while (frontIsClear()) move();                  // making steps till meet floor
-        //-------------------------------
-        turnLeft();                                     // turn to direction of next column
-
-        // make fOUR steps to the nex column
+        /* making steps till meet floor*/
+        while (frontIsClear()) {
+            move();
+        }
+        /* turn to direction of next column */
+        turnLeft();
+        /* make four steps to the next column */
         for (int i = 0; i < 4; i++) {
-            if (frontIsClear()) move();                 // while not the end of world (or wall) make step
+            if (frontIsClear()) {
+                move();
+            }
         }
     }
 
-    //==================================================================================================================
-    // Filling empty cells in column from floor to roof
-    //==================================================================================================================
+    /* Precondition: Karel is standing on floor facing east
+     * Result: Karel is standing under roof facing up
+     */
     private void buildColumn() throws Exception {
-
-        turnLeft();                                     // turn left to facing up
-
-        while (frontIsClear()) {                        // repeat while not roof
-            if (noBeepersPresent()) putBeeper();        //  +   if no beeper put beeper
-            move();                                     //  +   make step
+        /*turn left to facing up*/
+        turnLeft();
+        /* build (restore) column */
+        while (frontIsClear()) {
+            if (noBeepersPresent()) {
+                putBeeper();
+            }
+            move();
         }
-        if (noBeepersPresent()) putBeeper();            // put beeper (if needed) at last cell
-
+        /*put beeper (if needed) at last cell*/
+        if (noBeepersPresent()) {
+            putBeeper();
+        }
     }
 
-    //==================================================================================================================
-    // To turn around Karel turns left twice
-    //==================================================================================================================
+    /* Precondition: facing any
+     * Result: facing opposite
+     */
     private void turnAround() throws Exception {
-        turnLeft();                                    // 1
-        turnLeft();                                    // 2
+        turnLeft();
+        turnLeft();
     }
 
-    //==================================================================================================================
-    // To turn right Karel turns left triple
-    //==================================================================================================================
-    private void turnRight() throws Exception {
-        turnAround();                                  // 2
-        turnLeft();                                    // 3
-    }
 
 }
