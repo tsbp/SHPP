@@ -26,11 +26,13 @@ public class Assignment2Part2 extends WindowProgram {
      * bounding box containing circle    {x, y}     */
 
     /*******************************************************************************************************************
-     * main method
+     * Draws four black circles in corners of canvas
+     * and white rectangle over them.
+     * Edges of rectangle are in the centers of circles
      */
     public void run() {
 
-        int anchorPoint[][] = getArrayOfAnchorPoints();
+        int [][] anchorPoint = getArrayOfAnchorPoints();
         /* draw four filled black circles*/
         for (int i = 0; i < 4; i++) {
             addBubble(anchorPoint[i][0], anchorPoint[i][1]);
@@ -45,7 +47,6 @@ public class Assignment2Part2 extends WindowProgram {
 
     /*******************************************************************************************************************
      * Draws a rectangle filled white with specified parameters
-     *
      *
      * @param aX      The x coordinate of the upper-left corner of rectangle.
      * @param aY      The y coordinate of the upper-left corner of rectangle.
@@ -79,8 +80,8 @@ public class Assignment2Part2 extends WindowProgram {
      * @return  int array of anchor points {x, y} which are specify the upper-left corner
      * of the bounding box containing circle (for four circles)
      */
-    private int[][] getArrayOfAnchorPoints() {
-        int aPoint[][] = new int[4][2];
+    private int [][] getArrayOfAnchorPoints() {
+        int [][] aPoint = new int[4][2];
         /*      x                                           y               */
         aPoint[0][0] = 0;                        aPoint[0][1] = 0;
         aPoint[1][0] = 0;                        aPoint[1][1] = getHeight() - DIAM;

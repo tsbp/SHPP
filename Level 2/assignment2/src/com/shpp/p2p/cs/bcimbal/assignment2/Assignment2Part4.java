@@ -24,6 +24,9 @@ public class Assignment2Part4 extends WindowProgram {
     /* Three colors for flag*/
     private static Color color[] = {Color.CYAN, Color.BLUE, Color.RED};
 
+    /*******************************************************************************************************************
+     * Run
+     */
     public void run() {
 
         /* Calculate canter of canvas x and y, respectively*/
@@ -49,7 +52,7 @@ public class Assignment2Part4 extends WindowProgram {
 
     }
 
-    /**
+    /*******************************************************************************************************************
      * Draws a rectangle (segment of flag).
      *
      * @param aX      The x coordinate of the upper-left corner of segment.

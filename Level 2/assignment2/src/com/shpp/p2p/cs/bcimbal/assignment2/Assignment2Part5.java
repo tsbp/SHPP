@@ -15,9 +15,9 @@ public class Assignment2Part5 extends WindowProgram {
     public static final int APPLICATION_WIDTH = 700;
     public static final int APPLICATION_HEIGHT = 500;
 
-    /* Shift on x and y direction between segments, respectively. */
-    private static final int OFFSET_X = 0;
-    private static final int OFFSET_Y = 35;
+    /* Shift on x and y direction between segments of caterpillar, respectively. */
+    private static final int SHIFT_X = 30;
+    private static final int SHIFT_Y = 35;
 
     /* Position offset of picture in canvas from left top corner. */
     private static final int POSITION_OFFSET_X = 150;
@@ -25,12 +25,14 @@ public class Assignment2Part5 extends WindowProgram {
 
     /* Size and count caterpillar segments, respectively. */
     private static final int SEGMENT_SIZE = 100;
-    private static final int SEGMENT_COUNT = 6;
+    private static final int SEGMENT_COUNT = 14;
 
     /* Additionally, caterpillar eye size */
     private static final int EYE_SIZE = 30;
 
-    /* main method */
+    /*******************************************************************************************************************
+     *  main method
+     */
     public void run() {
         int alt = 0;                // used for alternate segment position
         int x = 0, y = 0;           // define current coordinates of segment
@@ -38,15 +40,16 @@ public class Assignment2Part5 extends WindowProgram {
         /*draw SEGMENT_COUNT segments*/
         for (int i = 0; i < SEGMENT_COUNT; i++) {
             /* calculate position of segment */
-            x = POSITION_OFFSET_X + i * OFFSET_X;
+            x = POSITION_OFFSET_X + i * SHIFT_X;
             y = POSITION_OFFSET_Y;
             /* if alt = 0 lower position , else upper position */
             if (alt == 1) {
-                y -= OFFSET_Y;    // up shift segment
+                y -= SHIFT_Y;    // up shift segment
             }
             segmentAdd(x, y, SEGMENT_SIZE, Color.GREEN, Color.YELLOW);                 // place current segment
             alt ^= 1;                                                                  // make alternating
         }
+
         /* place eyes, right and left */
         segmentAdd(x + SEGMENT_SIZE / 2 - 2 * EYE_SIZE, y, EYE_SIZE, Color.BLUE, Color.RED);
         segmentAdd(x + SEGMENT_SIZE / 2 + EYE_SIZE, y, EYE_SIZE, Color.BLUE, Color.RED);
