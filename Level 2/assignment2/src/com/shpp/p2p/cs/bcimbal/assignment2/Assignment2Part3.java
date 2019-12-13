@@ -1,7 +1,8 @@
 package com.shpp.p2p.cs.bcimbal.assignment2;
 
-/* TODO: Replace these file comments with a description of what your program
- * does.
+/*
+ * This program draws a pawprint.
+ *
  */
 import acm.graphics.*;
 import com.shpp.cs.a.graphics.WindowProgram;
@@ -37,19 +38,20 @@ public class Assignment2Part3 extends WindowProgram {
     private static final double HEEL_HEIGHT = 60;
 
     /* The default width and height of the window. These constants will tell Java to
-     * create a window whose size is *approximately* given by these dimensions. You should
-     * not directly use these constants in your program; instead, use getWidth() and
-     * getHeight(), which return the *exact* width and height of the window.
+     * create a window whose size is *approximately* given by these dimensions.
      */
     public static final int APPLICATION_WIDTH = 270;
     public static final int APPLICATION_HEIGHT = 220;
 
+    /*******************************************************************************************************************
+     * Run
+     */
     public void run() {
         drawPawprint(20, 20);
         drawPawprint(180, 70);
     }
 
-    /**
+    /*******************************************************************************************************************
      * Draws a pawprint. The parameters should specify the upper-left corner of the
      * bounding box containing that pawprint.
      *
@@ -58,15 +60,16 @@ public class Assignment2Part3 extends WindowProgram {
      */
     private void drawPawprint(double x, double y) {
 
+        /* create array of toes */
         GOval toe[] = new GOval[4];
+        /* fill array of toes with ovals with specified dimensions and offsets */
+        toe[0] = new GOval(x + FIRST_TOE_OFFSET_X, y + FIRST_TOE_OFFSET_Y, TOE_WIDTH, TOE_HEIGHT);
+        toe[1] = new GOval(x + SECOND_TOE_OFFSET_X, y + SECOND_TOE_OFFSET_Y, TOE_WIDTH, TOE_HEIGHT);
+        toe[2] = new GOval(x + THIRD_TOE_OFFSET_X, y + THIRD_TOE_OFFSET_Y, TOE_WIDTH, TOE_HEIGHT);
+        toe[3] = new GOval(x + HEEL_OFFSET_X, y + HEEL_OFFSET_Y, HEEL_WIDTH, HEEL_HEIGHT);
 
-        toe[0] = new GOval(x + FIRST_TOE_OFFSET_X,  y + FIRST_TOE_OFFSET_Y,  TOE_WIDTH,  TOE_HEIGHT);
-        toe[1] = new GOval(x + SECOND_TOE_OFFSET_X, y + SECOND_TOE_OFFSET_Y, TOE_WIDTH,  TOE_HEIGHT);
-        toe[2] = new GOval(x + THIRD_TOE_OFFSET_X , y + THIRD_TOE_OFFSET_Y,  TOE_WIDTH,  TOE_HEIGHT);
-        toe[3] = new GOval(x + HEEL_OFFSET_X,       y + HEEL_OFFSET_Y,       HEEL_WIDTH, HEEL_HEIGHT);
-
-
-        for(int i = 0; i < 4; i++){
+        /* set color parameters to each oval and add it to canvas*/
+        for (int i = 0; i < 4; i++) {
             toe[i].setFilled(true);
             toe[i].setFillColor(Color.BLACK);
             add(toe[i]);

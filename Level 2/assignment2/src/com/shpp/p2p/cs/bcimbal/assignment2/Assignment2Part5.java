@@ -1,8 +1,7 @@
 package com.shpp.p2p.cs.bcimbal.assignment2;
 
-/* TODO: Replace these file comments with a description of what your program
- * does.
- */
+/* This program draws picture similar to caterpillar */
+
 import acm.graphics.*;
 import com.shpp.cs.a.graphics.WindowProgram;
 
@@ -10,43 +9,65 @@ import java.awt.*;
 
 public class Assignment2Part5 extends WindowProgram {
 
-
     /* The default width and height of the window. These constants will tell Java to
-     * create a window whose size is *approximately* given by these dimensions. You should
-     * not directly use these constants in your program; instead, use getWidth() and
-     * getHeight(), which return the *exact* width and height of the window.
+     * create a window whose size is *approximately* given by these dimensions.
      */
     public static final int APPLICATION_WIDTH = 700;
     public static final int APPLICATION_HEIGHT = 500;
 
-    /* The number of rows and columns in the grid, respectively. */
-    private static final int NUM_ROWS = 7;
-    private static final int NUM_COLS = 8;
+    /* Shift on x and y direction between segments, respectively. */
+    private static final int OFFSET_X = 0;
+    private static final int OFFSET_Y = 35;
 
-    /* The width and height of each box. */
-    private static final double BOX_SIZE = 50;
+    /* Position offset of picture in canvas from left top corner. */
+    private static final int POSITION_OFFSET_X = 150;
+    private static final int POSITION_OFFSET_Y = 300;
 
-    /* The horizontal and vertical spacing between the boxes. */
-    private static final double BOX_SPACING = 10;
+    /* Size and count caterpillar segments, respectively. */
+    private static final int SEGMENT_SIZE = 100;
+    private static final int SEGMENT_COUNT = 6;
 
+    /* Additionally, caterpillar eye size */
+    private static final int EYE_SIZE = 30;
 
+    /* main method */
     public void run() {
+        int alt = 0;                // used for alternate segment position
+        int x = 0, y = 0;           // define current coordinates of segment
 
-        double x = (getWidth()  - (NUM_COLS * BOX_SIZE + (NUM_COLS - 1) * BOX_SPACING)) / 2;
-        double y = (getHeight() - (NUM_ROWS * BOX_SIZE + (NUM_ROWS - 1) * BOX_SPACING)) / 2;
-
-        for(int i = 0; i < NUM_ROWS; i++){
-            for (int j = 0; j < NUM_COLS; j++) {
-                GRect r = new GRect(
-                        x + j * (BOX_SIZE + BOX_SPACING),
-                        y + i * (BOX_SIZE + BOX_SPACING),
-                        BOX_SIZE, BOX_SIZE);
-                r.setFilled(true);
-                r.setFillColor(Color.BLACK);
-                add(r);
+        /*draw SEGMENT_COUNT segments*/
+        for (int i = 0; i < SEGMENT_COUNT; i++) {
+            /* calculate position of segment */
+            x = POSITION_OFFSET_X + i * OFFSET_X;
+            y = POSITION_OFFSET_Y;
+            /* if alt = 0 lower position , else upper position */
+            if (alt == 1) {
+                y -= OFFSET_Y;    // up shift segment
             }
+            segmentAdd(x, y, SEGMENT_SIZE, Color.GREEN, Color.YELLOW);                 // place current segment
+            alt ^= 1;                                                                  // make alternating
         }
+        /* place eyes, right and left */
+        segmentAdd(x + SEGMENT_SIZE / 2 - 2 * EYE_SIZE, y, EYE_SIZE, Color.BLUE, Color.RED);
+        segmentAdd(x + SEGMENT_SIZE / 2 + EYE_SIZE, y, EYE_SIZE, Color.BLUE, Color.RED);
+    }
 
+    /*******************************************************************************************************************
+     * Draws a circle(segment of caterpillar). The parameters should specify the upper-left corner of the
+     * bounding box containing segment? its size ad color.
+     *
+     * @param aX The x coordinate of the upper-left corner of segment.
+     * @param aY The y coordinate of the upper-left corner of segment.
+     * @param aSize Size of segment (circle).
+     * @param aColor Border color of segment.
+     * @param aFillColor Fill color of segment.
+     ******************************************************************************************************************/
+    private void segmentAdd(int aX, int aY, int aSize, Color aColor, Color aFillColor) {
+        GOval seg = new GOval(aX, aY, aSize, aSize);
+        seg.setColor(aColor);
+        seg.setFillColor(aFillColor);
+        seg.setFilled(true);
+        add(seg);
     }
 
 }

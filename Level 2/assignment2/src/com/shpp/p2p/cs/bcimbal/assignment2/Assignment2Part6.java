@@ -1,7 +1,7 @@
 package com.shpp.p2p.cs.bcimbal.assignment2;
 
-/* TODO: Replace these file comments with a description of what your program
- * does.
+/*
+ *  Program draws matrix of black boxes with spacing between them
  */
 import acm.graphics.*;
 import com.shpp.cs.a.graphics.WindowProgram;
@@ -11,44 +11,43 @@ public class Assignment2Part6 extends WindowProgram {
 
 
     /* The default width and height of the window. These constants will tell Java to
-     * create a window whose size is *approximately* given by these dimensions. You should
-     * not directly use these constants in your program; instead, use getWidth() and
-     * getHeight(), which return the *exact* width and height of the window.
-     */
+     * create a window whose size is *approximately* given by these dimensions.   */
     public static final int APPLICATION_WIDTH = 700;
     public static final int APPLICATION_HEIGHT = 500;
 
-    public static final int SEGMENT_WIDTH = 100;
-    public static final int SEGMENT_HEIGHT = 250;
-    public static final String FLAG_OFF = "Flag of Azmoland";
-    private static int OFFSET = 8; //to shift the baseline down a little, you need to add the  appropriate offset and not subtract it
+    /* The number of rows and columns in the grid, respectively. */
+    private static final int NUM_ROWS = 5;
+    private static final int NUM_COLS = 6;
 
+    /* The width and height of each box. */
+    private static final double BOX_SIZE = 50;
 
-    Color color[] = {Color.BLACK, Color.YELLOW, Color.RED};
-
+    /* The horizontal and vertical spacing between the boxes. */
+    private static final double BOX_SPACING = 20;
 
 
     public void run() {
 
-        int centerX = getWidth()  / 2;
-        int centerY = getHeight() / 2;
+        /* define start point coordinates x, y from which we start draw */
+        int x = (int) (getWidth()  - (NUM_COLS * BOX_SIZE + (NUM_COLS - 1) * BOX_SPACING)) / 2;
+        int y = (int) (getHeight() - (NUM_ROWS * BOX_SIZE + (NUM_ROWS - 1) * BOX_SPACING)) / 2;
 
-        int startX = centerX - 3 * (SEGMENT_WIDTH  / 2);
-        int startY = centerY -     (SEGMENT_HEIGHT / 2);
-
-        for(int i = 0; i < 3; i++){
-            GRect segment = new GRect(startX + i * SEGMENT_WIDTH, startY, SEGMENT_WIDTH, SEGMENT_HEIGHT);
-            segment.setColor(color[i]);
-            segment.setFilled(true);
-            segment.setFillColor(color[i]);
-            add(segment);
+        /* draw NUM_ROWS rows with NUM_COLS squares with BOX_SPACING spacing between them */
+        for (int i = 0; i < NUM_ROWS; i++) {
+            /* draw row of squares */
+            for (int j = 0; j < NUM_COLS; j++) {
+                GRect r = new GRect(
+                        x + j * (BOX_SIZE + BOX_SPACING),      // x coordinate, make shift j times on (BOX_SIZE + BOX_SPACING) value
+                        y + i * (BOX_SIZE + BOX_SPACING),     // y coordinate, make shift i times on (BOX_SIZE + BOX_SPACING) value
+                        BOX_SIZE, BOX_SIZE);                      // square with BOX_SIZE * BOX_SIZE dimension
+                r.setFillColor(Color.BLACK);
+                r.setFilled(true);
+                add(r);
+            }
         }
-
-        GLabel label = new GLabel(FLAG_OFF);
-        label.setFont(new Font("Courier New", 3, 36)); //label.setFont("Courier New-36");
-        double x = (getWidth() - label.getWidth());
-        double y = (getHeight()) - OFFSET;// + label.getAscent());
-        add(label, x, y);
+        /*TODO
+             to reviewer: decomposition is not needed, because matrix is drawn in few steps
+        */
 
     }
 
