@@ -43,6 +43,14 @@ public class Assignment2Part3 extends WindowProgram {
     public static final int APPLICATION_WIDTH = 270;
     public static final int APPLICATION_HEIGHT = 220;
 
+    /* array of toes */
+    private static final double [][] toeOffsetArray = {
+            {FIRST_TOE_OFFSET_X, FIRST_TOE_OFFSET_Y, TOE_WIDTH, TOE_HEIGHT},
+            {SECOND_TOE_OFFSET_X, SECOND_TOE_OFFSET_Y, TOE_WIDTH, TOE_HEIGHT},
+            {THIRD_TOE_OFFSET_X, THIRD_TOE_OFFSET_Y, TOE_WIDTH, TOE_HEIGHT},
+            {HEEL_OFFSET_X, HEEL_OFFSET_Y, HEEL_WIDTH, HEEL_HEIGHT}
+    };
+
     /*******************************************************************************************************************
      * Run
      */
@@ -60,19 +68,15 @@ public class Assignment2Part3 extends WindowProgram {
      */
     private void drawPawprint(double x, double y) {
 
-        /* create array of toes */
-        GOval toe[] = new GOval[4];
-        /* fill array of toes with ovals with specified dimensions and offsets */
-        toe[0] = new GOval(x + FIRST_TOE_OFFSET_X, y + FIRST_TOE_OFFSET_Y, TOE_WIDTH, TOE_HEIGHT);
-        toe[1] = new GOval(x + SECOND_TOE_OFFSET_X, y + SECOND_TOE_OFFSET_Y, TOE_WIDTH, TOE_HEIGHT);
-        toe[2] = new GOval(x + THIRD_TOE_OFFSET_X, y + THIRD_TOE_OFFSET_Y, TOE_WIDTH, TOE_HEIGHT);
-        toe[3] = new GOval(x + HEEL_OFFSET_X, y + HEEL_OFFSET_Y, HEEL_WIDTH, HEEL_HEIGHT);
-
-        /* set color parameters to each oval and add it to canvas*/
         for (int i = 0; i < 4; i++) {
-            toe[i].setFilled(true);
-            toe[i].setFillColor(Color.BLACK);
-            add(toe[i]);
+            GOval toe = new GOval(
+                    x + toeOffsetArray[i][0],
+                    y + toeOffsetArray[i][1],
+                    toeOffsetArray[i][2],
+                    toeOffsetArray[i][3]);
+            toe.setFilled(true);
+            toe.setFillColor(Color.BLACK);
+            add(toe);
         }
     }
 }
