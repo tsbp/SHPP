@@ -20,7 +20,7 @@ public class Assignment4Part1 extends WindowProgram {
     private static final int HEIGHT = APPLICATION_HEIGHT;
 
     /** Dimensions of the paddle */
-    private static final int PADDLE_WIDTH = 200;
+    private static final int PADDLE_WIDTH = 60;
     private static final int PADDLE_HEIGHT = 10;
 
     /** Offset of the paddle up from the bottom */
@@ -86,11 +86,12 @@ public class Assignment4Part1 extends WindowProgram {
         while (true) {
             switch (mode) {
                 case game:
-                    removeAll();
+
                     createGameTable();
                     countdown();
-                    playGame();
-                    removeAll();
+                    while(mode == Mode.game)
+                        playGame();
+
                     createStartMenu();
                     mode = Mode.none;
                     break;
@@ -105,7 +106,7 @@ public class Assignment4Part1 extends WindowProgram {
 
     /*******************************************************************************************************************/
     private void playGame() {
-        while(mode == Mode.game) {
+//        while(mode == Mode.game) {
             int attempts = NTURNS;
             while(attempts > 0 && mode == Mode.game)
             {
@@ -124,7 +125,7 @@ public class Assignment4Part1 extends WindowProgram {
             else sccoreLabelSetText("You win!");
             pause(2000);
             mode = Mode.none;
-        }
+//        }
     }
 
     /*******************************************************************************************************************/
@@ -155,6 +156,7 @@ public class Assignment4Part1 extends WindowProgram {
 
     /*******************************************************************************************************************/
     private void createGameTable() {
+        removeAll();
         gameScore = 0;
         scoreLabelCreate();
         ball = new GOval(BALL_RADIUS * 2, BALL_RADIUS * 2);
@@ -283,8 +285,8 @@ public class Assignment4Part1 extends WindowProgram {
      *
      */
     private void createStartMenu() {
+        removeAll();
         setBackground(Color.lightGray);
-
         img = new GImage(IMG_FILE);
         double x = (getWidth() - img.getWidth()) / 2;
         //img.setSize(getWidth(), getHeight());
