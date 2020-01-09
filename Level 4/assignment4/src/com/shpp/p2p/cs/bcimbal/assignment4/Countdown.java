@@ -39,7 +39,7 @@ public class Countdown extends GCompound {
         label.setVisible(true);
         int i = 200;
         label.setFont(new Font("Courier New", 3, i));
-        while (i > 0) {
+        while (i > 20) {
             scaleA(i, x, y);
             i -= 5;
             pause(10);
