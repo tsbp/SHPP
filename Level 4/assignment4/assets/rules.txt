@@ -1,0 +1,5 @@
+ESC - finish current game
+SPACE - pause current game
+left mouse move - start next attempt
+_________________
+press ESC ot exit
