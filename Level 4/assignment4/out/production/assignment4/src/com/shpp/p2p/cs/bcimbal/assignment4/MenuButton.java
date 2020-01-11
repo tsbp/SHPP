@@ -8,49 +8,63 @@ import acm.graphics.GRect;
 import java.awt.*;
 
 public class MenuButton extends GCompound {
-    private static final int MARGIN_SIDE = 100;
 
+    /* Button settings */
+    private static final int BUTTON_WIDTH = 250;
+    public static final int BUTTON_HEIGHT = 40;
+    private static final int BUTTON_SCALE_STEP = 20;
+
+    /* button components */
     private GRect rect;
+    private GLabel label;
 
     /**
-     * @param canvasWidth
-     * @param x
-     * @param y
-     * @param color
-     * @param title
+     * Method to create menu button
+     *
+     * @param canvasWidth parameter to set button position at the center of canvas
+     * @param y vertical coordinate of button
+     * @param color button color
+     * @param title button title
      */
-    public MenuButton(double canvasWidth, double x, double y, Color color, String title) {
-        rect = new GRect(x, y);
+    public MenuButton(double canvasWidth, double y, Color color, String title) {
+
+        rect = new GRect((canvasWidth - BUTTON_WIDTH) / 2, y);//(x, y);
         rect.setColor(color);
-        rect.setSize(0, 50);
+        rect.setSize(0, BUTTON_HEIGHT);
         add(rect);
         fill(color, rect);
 
-        GLabel label = new GLabel(title);
+        label = new GLabel(title);
         label.setColor(Color.WHITE);
-        label.setFont(new Font("Courier New", 3, 36));
-//         /* calculate position of text*/
+        label.setVisible(false);
+        label.setFont(new Font("Courier New", Font.BOLD, 28));
+        /* calculate position of text*/
         double _x = (canvasWidth - label.getWidth()) / 2;
         double _y = (y + rect.getHeight() / 2 + (label.getDescent()));
         add(label, _x, _y);
     }
 
-    /**
-     * @param canvasWidth
-     * @param y
+    /*******************************************************************************************************************
+     * Animate button creation
+     *
+     * @param canvasWidth parameter to set button position at the center of canvas
+     * @param y vertical coordinate of button
      */
     public void animate(double canvasWidth, double y) {
-
-        while (rect.getWidth() < canvasWidth - MARGIN_SIDE * 2) {
-            rect.setSize(rect.getWidth() + 20, rect.getHeight());
+        /*animate button by adding to horizontal size of it*/
+        while (rect.getWidth() < BUTTON_WIDTH) {
+            rect.setSize(rect.getWidth() + BUTTON_SCALE_STEP, rect.getHeight());
             rect.setLocation((canvasWidth - rect.getWidth()) / 2, y);
             pause(20);
         }
+        label.setVisible(true);
     }
 
-    /**
-     * @param color
-     * @param obj
+    /*******************************************************************************************************************
+     * Fill GObject to color
+     *
+     * @param color fill color
+     * @param obj  object to fill
      */
     private void fill(Color color, GFillable obj) {
         obj.setFillColor(color);
