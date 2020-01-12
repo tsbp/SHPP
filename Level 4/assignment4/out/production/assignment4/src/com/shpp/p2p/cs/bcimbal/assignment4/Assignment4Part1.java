@@ -1,12 +1,13 @@
 package com.shpp.p2p.cs.bcimbal.assignment4;
 
-/* My attempt to create popular game Breakout
+/* My attempt to create version of popular video game Breakout
 * https://en.wikipedia.org/wiki/Breakout_(video_game)
 * */
 
 import acm.graphics.*;
 import acm.util.RandomGenerator;
 import com.shpp.cs.a.graphics.WindowProgram;
+import javafx.scene.media.AudioClip;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -17,7 +18,7 @@ public class Assignment4Part1 extends WindowProgram {
     /**
      * Width and height of application window in pixels
      */
-    public static final int APPLICATION_WIDTH = 800;
+    public static final int APPLICATION_WIDTH = 400;
     public static final int APPLICATION_HEIGHT = 600;
 
     /**
@@ -103,18 +104,22 @@ public class Assignment4Part1 extends WindowProgram {
     private static Mode stage = Mode.none;
 
     /* Global variables */
+
+    /* gameplay objects*/
     private static GLabel scoreLbl;
     private static GOval ball;
     private static Paddle paddle;
-
+    /* gameplay control variables*/
     private double directionX = 1;              // vx
     private double directionY = 3;              // vy
-    private boolean isGamePaused = false;         // game pause control variable
+    private boolean isGamePaused = false;       // game pause control variable
     private int sticking = 0;                   // ball to paddle sticking control
 
     private MouseEvent me = null;
 
     public void run() {
+
+
 
         createStartMenu();
         addMouseListeners();

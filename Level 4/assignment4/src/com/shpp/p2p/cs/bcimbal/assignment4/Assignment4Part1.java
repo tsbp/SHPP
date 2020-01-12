@@ -7,6 +7,7 @@ package com.shpp.p2p.cs.bcimbal.assignment4;
 import acm.graphics.*;
 import acm.util.RandomGenerator;
 import com.shpp.cs.a.graphics.WindowProgram;
+import javafx.scene.media.AudioClip;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -117,6 +118,8 @@ public class Assignment4Part1 extends WindowProgram {
     private MouseEvent me = null;
 
     public void run() {
+
+
 
         createStartMenu();
         addMouseListeners();
