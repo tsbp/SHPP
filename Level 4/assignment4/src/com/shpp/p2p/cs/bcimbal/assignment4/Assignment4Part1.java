@@ -99,9 +99,18 @@ public class Assignment4Part1 extends WindowProgram {
             Color.CYAN
     };
 
+    /* messages to user */
+    private static final String USER_MSG_NEXT_ATTEMPT = "<------";
+    private static final String USER_MSG_LOOSE = "Looser!";
+    private static final String USER_MSG_WIN = "Winner!";
+    private static final String USER_MSG_PAUSED = "Paused";
+
     /* program stages */
-    private enum Mode {game, exit, rules, pause, none}
+    private enum Mode {game, exit, rules, wait, none}
     private static Mode stage = Mode.none;
+
+    /* ball speed*/
+    private static final double WAIT_DELAY = 7;
 
     /* Global variables */
 
@@ -115,7 +124,7 @@ public class Assignment4Part1 extends WindowProgram {
     private boolean isGamePaused = false;       // game pause control variable
     private int sticking = 0;                   // ball to paddle sticking control
 
-    private MouseEvent me = null;
+    private MouseEvent mEv = null;               // moved up to scope to detect left mouse movement
 
     public void run() {
 
@@ -149,14 +158,14 @@ public class Assignment4Part1 extends WindowProgram {
     }
 
     /*******************************************************************************************************************
-     *
+     * play game
      */
     private void playGame() {
         int attempts = NTURNS;
-        int gameScore = 0;
-        directionX = getRandomTilt();
+        int bricksRemains = (NBRICKS_PER_ROW * NBRICK_ROWS);
+        directionX = getRandomDirection();
 
-        scoreLabelSetText(gameScore + "");
+        scoreLabelSetText((NBRICKS_PER_ROW * NBRICK_ROWS - bricksRemains) + "");
         isGamePaused = false;
         while (attempts > 0 && stage == Mode.game) {
 
@@ -166,31 +175,37 @@ public class Assignment4Part1 extends WindowProgram {
             ball.move(directionX, directionY);
             /* add game score if brick boomed */
             if (isBrickBoom(ball.getX(), ball.getY())) {
-                gameScore++;
-                if (gameScore >= (NBRICKS_PER_ROW * NBRICK_ROWS)) stage = Mode.none; //you win
-                scoreLabelSetText("" + gameScore);
+                bricksRemains--;
+                if (bricksRemains <= 0) { //you win
+                    stage = Mode.none;
+                    countdown(USER_MSG_WIN);
+                    return;
+                }
+                else scoreLabelSetText("" + (NBRICKS_PER_ROW * NBRICK_ROWS - bricksRemains));
+
             }
             /* bad situation, ball missed, attempt failed */
             if (isBallOnFloor(ball.getY())) {
                 attempts--;
                 scoreLabelSetText(attempts + " attempts left");
-                directionX = getRandomTilt();
+                directionX = getRandomDirection();
                 if (attempts > 0) waitForContinue();
             }
-
-            pause(7);
+            pause(WAIT_DELAY);
         }
 
-        /* game result */
-        if (gameScore < (NBRICKS_PER_ROW * NBRICK_ROWS)) {
-            scoreLabelSetText("Looser!");
-            pause(HEIGHT + 2000);
-        } else countdown("Winner!");
+        /* game loose */
+        scoreLabelSetText(USER_MSG_LOOSE);
+        pause(2000);
         stage = Mode.none;
     }
 
-    /******************************************************************************************************************/
-    private double getRandomTilt() {
+    /*******************************************************************************************************************
+     *
+     *
+     * @return double random horizontal direction
+     */
+    private double getRandomDirection() {
         RandomGenerator rgen = RandomGenerator.getInstance();
         double vx = rgen.nextDouble(1.0, 3.0);
         if (rgen.nextBoolean(0.5))
@@ -198,7 +213,12 @@ public class Assignment4Part1 extends WindowProgram {
         return vx;
     }
 
-    /******************************************************************************************************************/
+    /*******************************************************************************************************************
+     * Check if ball is on floor
+     *
+     * @param y double current y coordinate
+     * @return true if floor detected
+     */
     private boolean isBallOnFloor(double y) {
         return y + 2 * BALL_RADIUS >= getHeight();
     }
@@ -208,16 +228,16 @@ public class Assignment4Part1 extends WindowProgram {
      */
     private void waitForContinue() {
         /*  */
-        stage = Mode.pause;
+        stage = Mode.wait;
         pause(1000);
         double tmpX = 0;
-        scoreLabelSetText("RUN");
+        scoreLabelSetText(USER_MSG_NEXT_ATTEMPT);
         moveToOriginalPosition(ball);
         /* wait for left mouse movement */
-        while (stage == Mode.pause) {
-            if (me != null) {
-                if (me.getX() < tmpX) stage = Mode.game;
-                tmpX = me.getX();
+        while (stage == Mode.wait) {
+            if (mEv != null) {
+                if (mEv.getX() < tmpX) stage = Mode.game;
+                tmpX = mEv.getX();
             }
             pause(10);
         }
@@ -276,8 +296,8 @@ public class Assignment4Part1 extends WindowProgram {
                         x + j * (BRICK_WIDTH + BRICK_SEP),
                         BRICK_Y_OFFSET + i * (BRICK_HEIGHT + BRICK_SEP),
                         BRICK_WIDTH, BRICK_HEIGHT);
-                r.setColor(brickColor[i / 2]);
-                r.setFillColor(brickColor[i / 2]);
+                r.setColor(brickColor[(i / 2) % brickColor.length]);
+                r.setFillColor(brickColor[(i / 2) % brickColor.length]);
                 r.setFilled(true);
                 add(r);
             }
@@ -301,18 +321,17 @@ public class Assignment4Part1 extends WindowProgram {
 
                 if (obj != null && obj != scoreLbl) {
                     directionY = -directionY;
-
                     if (obj == paddle) {
                         sticking++;                  // direction changed
                         if (sticking > 3) {          // 3 directions changes in paddle - sticking detected
                             ball.setLocation(        // set ball location behind paddle
                                     ball.getX(),
                                     (getHeight() - PADDLE_Y_OFFSET - BALL_RADIUS * 2));
-                            directionX = getRandomTilt();  // get random trajectory
-                            sticking = 0;
+                            directionX = getRandomDirection();  // get random trajectory
                         }
                         return false;
                     }
+                    sticking = 0;
                     remove(obj);
                     return true;
                 }
@@ -371,11 +390,11 @@ public class Assignment4Part1 extends WindowProgram {
 
     /******************************************************************************************************************/
     public void mouseMoved(MouseEvent mouseEvent) {
-        me = mouseEvent;
+        mEv = mouseEvent;
         try {
             switch (stage) {
                 case game:
-                case pause:
+                case wait:
                     /* move paddle to cursor position */
                     double positionX = mouseEvent.getX() - PADDLE_WIDTH / 2d;
                     double positionY = getHeight() - PADDLE_Y_OFFSET;
@@ -399,7 +418,7 @@ public class Assignment4Part1 extends WindowProgram {
                 break;
             case KeyEvent.VK_SPACE:          // SPACE
                 isGamePaused = !isGamePaused;
-                if (isGamePaused) scoreLabelSetText("Sleeping");
+                if (isGamePaused) scoreLabelSetText(USER_MSG_PAUSED);
                 else scoreLabelSetText("");
                 break;
         }

@@ -7,10 +7,17 @@ import java.awt.*;
 
 public class Paddle extends GCompound {
 
+    private static int PADDLE_THICKNESS = 6;
+
+    /**
+     *
+     * @param w  paddle width
+     * @param h paddle height
+     */
     public Paddle(double w, double h) {
 
         /*board*/
-        for (int i = 8; i > 0; i--) {
+        for (int i = PADDLE_THICKNESS; i > 0; i--) {
             GOval o = new GOval(w, h);
             o.setColor(Color.BLUE);
             o.setFillColor(Color.RED);
@@ -19,12 +26,12 @@ public class Paddle extends GCompound {
         }
 
         /* grip */
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < PADDLE_THICKNESS; i++) {
             GOval o = new GOval(w / 5, w / 5);
-            o.setColor(Color.black);
+            o.setColor(Color.LIGHT_GRAY);
             o.setFillColor(Color.WHITE);
             o.setFilled(true);
-            add(o, (w - w / 5) / 2, i + 10);
+            add(o, (w - w / 5) / 2, i + h);
         }
     }
 

@@ -19,7 +19,7 @@ public class MenuButton extends GCompound {
     private GLabel label;
 
     /**
-     * Method to create menu button
+     *  create menu button
      *
      * @param canvasWidth parameter to set button position at the center of canvas
      * @param y vertical coordinate of button

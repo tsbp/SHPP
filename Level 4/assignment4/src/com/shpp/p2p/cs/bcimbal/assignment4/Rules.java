@@ -10,6 +10,11 @@ import java.io.IOException;
 
 public class Rules extends GCompound {
 
+    private static int FONT_SIZE = 20;
+    private static int LABEL_OFFSET = FONT_SIZE + 5;
+    private static String FONT_SET = "Arial";
+
+
     public  Rules() {
         try {
             /* Open the file for reading. */
@@ -23,7 +28,7 @@ public class Rules extends GCompound {
                 if (line == null) break;
 
                 showText(line, offset);
-                offset += 30;
+                offset += LABEL_OFFSET;
             }
 
             br.close();
@@ -42,7 +47,7 @@ public class Rules extends GCompound {
 
         GLabel label = new GLabel(text);
         label.setColor(Color.WHITE);
-        label.setFont("Arial-" + 20);
+        label.setFont(FONT_SET + "-" + FONT_SIZE);
         label.setLocation(0, offset);
         add(label);
     }
