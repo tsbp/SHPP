@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="apk" name="assignment4:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/assignment4_jar</output-path>
+    <properties id="android-properties">
+      <options>
+        <option name="keyStoreUrl" value="file://" />
+      </options>
+    </properties>
+    <root id="archive" name="assignment4_jar.apk">
+      <element id="module-output" name="assignment4" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../Level 2/shpp-cs-java-lib.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
