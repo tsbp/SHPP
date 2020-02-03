@@ -41,7 +41,7 @@ public class NameSurfer extends SimpleProgram implements NameSurferConstants {
         this.add(new JButton(BUTTON2_ACTION), "North");
         this.addActionListeners();
 
-        dataBase = new NameSurferDataBase("assets/" + NameSurferConstants.NAMES_DATA_FILE);
+        dataBase = new NameSurferDataBase("assets/" + NAMES_DATA_FILE);
         graph = new NameSurferGraph();
         this.add(graph);
     }
@@ -68,11 +68,12 @@ public class NameSurfer extends SimpleProgram implements NameSurferConstants {
                if (entry != null) {
                    graph.addEntry(entry);
                    System.out.println(BUTTON1_ACTION + ": " + entry.toString());
-               } else System.out.println("Name not found");
+               } else System.out.println("Name " + request + " not found");
            }
        }
        else if(e.getActionCommand().equals(BUTTON2_ACTION)) {
            System.out.println(BUTTON2_ACTION);
+           graph.clear();
        }
     }
 }
