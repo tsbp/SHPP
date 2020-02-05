@@ -68,7 +68,9 @@ public class NameSurfer extends SimpleProgram implements NameSurferConstants {
                if (entry != null) {
                    graph.addEntry(entry);
                    System.out.println(BUTTON1_ACTION + ": " + entry.toString());
-               } else System.out.println("Name " + request + " not found");
+               } else {
+                   System.out.println("Name " + request + " not found");
+               }
            }
        }
        else if(e.getActionCommand().equals(BUTTON2_ACTION)) {

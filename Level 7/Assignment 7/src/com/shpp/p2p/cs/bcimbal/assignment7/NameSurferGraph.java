@@ -35,7 +35,7 @@ public class NameSurferGraph extends GCanvas
      */
     public void clear() {
         entries.clear();
-        entryGraph.clear();
+        entriesGraphs.clear();
         update();
     }
 
@@ -69,15 +69,26 @@ public class NameSurferGraph extends GCanvas
                 height - (GRAPH_MARGIN_SIZE + GRAPH_TIMELAPSE_HEIGHT));
         add(grCanv, GRAPH_MARGIN_SIZE, GRAPH_MARGIN_SIZE);
 
-        for (GCompound cp : entryGraph) {
-            add(cp, GRAPH_MARGIN_SIZE, GRAPH_MARGIN_SIZE);
+        if (entries.size() > 0) {
+            for (GCompound graph : entriesGraphs) {
+                add(graph, GRAPH_MARGIN_SIZE, GRAPH_MARGIN_SIZE);
+            }
+            /* create legend*/
+            GCompound legend = graphLegend();
+            add(legend, width - (GRAPH_LEGEND_WIDTH - GRAPH_MARGIN_SIZE),
+                    GRAPH_MARGIN_SIZE);
+            legend.setLocation(
+                    width - (GRAPH_LEGEND_WIDTH - GRAPH_MARGIN_SIZE),
+                    GRAPH_MARGIN_SIZE + (height - GRAPH_MARGIN_SIZE - GRAPH_TIMELAPSE_HEIGHT - legend.getHeight()) / 2
+            );
         }
+
 
     }
 
-    ArrayList<GCompound> entryGraph;
+    ArrayList<GCompound> entriesGraphs;
 
-    private ArrayList<GCompound> entriesGraphs(double width, double height) {
+    private ArrayList<GCompound> getEntriesGraphs(double width, double height) {
         ArrayList<GCompound> eGraph = new ArrayList<>();
 
         /* draw graph for each entry*/
@@ -89,28 +100,69 @@ public class NameSurferGraph extends GCanvas
                     height - scaleRank(height, entries.get(color).getRank(0))
             );
 
+            /* create sublines for current entry values*/
             for (int cRank = 1; cRank < NDECADES; cRank++) {
+                /* define endpoint of subline*/
                 GPoint endPoint = new GPoint(
                         cRank * getDecadeWidth(width),
                         height - scaleRank(height, entries.get(color).getRank(cRank))
                 );
+                /* create subline*/
                 GLine subLine = new GLine(
                         startPoint.getX(), startPoint.getY(),
                         endPoint.getX(), endPoint.getY());
                 subLine.setColor(color);
                 c.add(subLine);
-                GOval p = new GOval(startPoint.getX() - 5, startPoint.getY() - 5, 10, 10);
-                p.setFillColor(color);
-                //p.setColor(color);
-                p.setFilled(true);
-                p.setVisible(false);
-                c.add(p);
+                /* add vertex for current value of entry*/
+                c.add(createVertex(startPoint.getX(), startPoint.getY(), color));
+                c.add(createRankLabel(
+                        startPoint.getX(), startPoint.getY(),
+                        "" + entries.get(color).getRank(cRank - 1))
+                );
+                if(cRank == NDECADES/ 2)
+                    c.add(createRankLabel(
+                            startPoint.getX(), GRAPH_MARGIN_SIZE + 30,
+                            entries.get(color).getName()));
                 startPoint = endPoint;
             }
+            c.add(createVertex(startPoint.getX(), startPoint.getY(), color));
+            c.add(createRankLabel(
+                    startPoint.getX(), startPoint.getY(),
+                    "" + entries.get(color).getRank(NDECADES - 1))
+            );
             eGraph.add(c);
 
         }
         return eGraph;
+    }
+
+    /*******************************************************************************************************************
+     *
+     * @param x a
+     * @param y a
+     * @param rank a
+     * @return a
+     */
+    private GLabel createRankLabel(double x, double y, String rank) {
+        GLabel value = new GLabel(rank, x + 2, y - 6);
+        value.setVisible(false);
+        return value;
+    }
+
+    /*******************************************************************************************************************
+     *
+     * @param x a
+     * @param y a
+     * @param color a
+     * @return a
+     */
+    private GOval createVertex(double x, double y, Color color) {
+        GOval p = new GOval(x - 5, y - 5, 10, 10);
+        p.setFillColor(color);
+        //p.setColor(color);
+        p.setFilled(true);
+        p.setVisible(false);
+        return p;
     }
 
     /*******************************************************************************************************************
@@ -138,7 +190,7 @@ public class NameSurferGraph extends GCanvas
         /* guid lines*/
         for (int i = 0; i < NDECADES; i++) {
             double x = (i + 1) * getDecadeWidth(gr.getWidth());
-            if (i < NDECADES - 2) {
+            if (i < NDECADES - 1) {
                 GLine guid = new GLine(x, 1, x, gr.getHeight() - 1);
                 guid.setColor(Color.LIGHT_GRAY);
                 c.add(guid);
@@ -153,13 +205,16 @@ public class NameSurferGraph extends GCanvas
 
         /* if entries are present*/
         if (entries.size() > 0) {
-            entryGraph = entriesGraphs(gr.getWidth(), gr.getHeight());
-            /* create legend*/
-            c.add(graphLegend());
+            entriesGraphs = getEntriesGraphs(gr.getWidth(), gr.getHeight());
+
         }
         return c;
     }
 
+    /*******************************************************************************************************************
+     *
+     * @return a
+     */
     private GCompound graphLegend() {
         GCompound c = new GCompound();
         GRect bGgr = new GRect(
@@ -168,25 +223,30 @@ public class NameSurferGraph extends GCanvas
         bGgr.setColor(Color.WHITE);
         bGgr.setFillColor(Color.WHITE);
         bGgr.setFilled(true);
-        bGgr.setLocation(
-                width - GRAPH_LEGEND_WIDTH,
-                (height - bGgr.getHeight() - GRAPH_TIMELAPSE_HEIGHT - GRAPH_MARGIN_SIZE) / 2);
         c.add(bGgr);
+
         int cntr = 0;
         for (Color color : entries.keySet()) {
             GLine legLine = new GLine(
-                    bGgr.getX() + 5, 20 + bGgr.getY() + cntr * 30,
-                    bGgr.getX() + bGgr.getWidth() - 5, 20 + bGgr.getY() + cntr * 30
+                    bGgr.getX() + 5, 25 + cntr * 30,
+                    bGgr.getX() + bGgr.getWidth() - 5, 25  + cntr * 30
             );
             cntr++;
             legLine.setColor(color);
             c.add(legLine);
+
+            c.add(createRankLabel(
+                    legLine.getX() + 5,
+                    legLine.getY() - 1,
+                    "" + entries.get(color).getName())
+            );
+            setGraphVertexVisible(true, c);
         }
         return c;
     }
 
     double getDecadeWidth(double totalWidth) {
-        return totalWidth / (NDECADES - 1);
+        return totalWidth / (NDECADES);
     }
 
 
@@ -194,13 +254,13 @@ public class NameSurferGraph extends GCanvas
     protected void processMouseMotionEvent(MouseEvent e) {
         super.processMouseMotionEvent(e);
         try {
-            for (GCompound gCompound : entryGraph) {
+            for (GCompound graph : entriesGraphs) {
                 GObject obj = getElementAt(e.getX(), e.getY());
-                if (obj == gCompound) {
-                    Color colo = gCompound.getElement(0).getColor();
+                if (obj == graph) {
+                    Color colo = graph.getElement(0).getColor();
                     System.out.println(entries.get(colo).toString());
-                    setGraphVertexVisible(true, gCompound);
-                } else setGraphVertexVisible(false, gCompound);
+                    setGraphVertexVisible(true, graph);
+                } else setGraphVertexVisible(false, graph);
             }
         } catch (Exception ignored) {
 
@@ -213,7 +273,8 @@ public class NameSurferGraph extends GCanvas
      */
     void setGraphVertexVisible(boolean visible, GCompound graph) {
         for (int i = 0; i < graph.getElementCount(); i++) {
-            if (graph.getElement(i) instanceof GOval)
+            GObject obj = graph.getElement(i);
+            if (obj instanceof GOval || obj instanceof GLabel)
                 graph.getElement(i).setVisible(visible);
         }
 
