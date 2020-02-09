@@ -24,15 +24,17 @@ public class NameSurferEntry implements NameSurferConstants {
      * decade.
      */
     public NameSurferEntry(String line) {
-        // You fill this in //
+        /* convert current string to arrayList*/
         ArrayList<String> sEntry = new ArrayList();
         while(line.contains(" ")) {
             sEntry.add(line.substring(0, line.indexOf(" ")));
             line = line.substring(line.indexOf(" ") + 1);
         }
-        sEntry.add(line);
+        sEntry.add(line); // add last value
+        /* get name */
         this.name = sEntry.get(0);
         sEntry.remove(0);
+        /* get ranks*/
         rank = new int[sEntry.size()];
         for(int i = 0; i < sEntry.size(); i++)
             rank[i] = Integer.parseInt(sEntry.get(i));
@@ -44,7 +46,6 @@ public class NameSurferEntry implements NameSurferConstants {
      * Returns the name associated with this entry.
      */
     public String getName() {
-        // You need to turn this stub into a real implementation //
         return name;
     }
 
@@ -58,7 +59,6 @@ public class NameSurferEntry implements NameSurferConstants {
      * not appear in a decade, the rank value is 0.
      */
     public int getRank(int decade) {
-        // You need to turn this stub into a real implementation //
         return rank[decade];
     }
 
@@ -69,7 +69,6 @@ public class NameSurferEntry implements NameSurferConstants {
      * NameSurferEntry.
      */
     public String toString() {
-        // You need to turn this stub into a real implementation //
         StringBuilder sb = new StringBuilder();
         for(int a:rank)  sb.append(a + " ");
         return name + " [" + sb.toString().trim() + "]";

@@ -43,6 +43,9 @@ public interface NameSurferConstants {
     /**
      * The number of pixels to reserve at the top and bottom
      */
-    public static final int GRAPH_MARGIN_SIZE = 20;
+    public static final int GRAPH_MARGIN_SIZE = 15;
+
+    public static int GRAPH_TIMELAPSE_HEIGHT = 30;
+    public static int GRAPH_LEGEND_WIDTH = 100;
 
 }
