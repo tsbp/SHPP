@@ -2,27 +2,50 @@ package com.shpp.p2p.cs.bcimbal.assignment10;
 
 import java.util.HashMap;
 
-
+/* Class Variables makes parsing input array of string to map of variable values*/
 
 public class Variables {
 
+    /*  Map of variables values*/
     private static HashMap<String, Double> variables;
 
-    public Variables (String [] args) {
-        variables = parseVariables(args);
-    }
-
-    public  HashMap<String, Double> getVariables() {
-        return variables;
-    }
-
-    private static HashMap<String, Double> parseVariables(String[] args) {
-        HashMap<String, Double> variables = new HashMap<>();
-        for(int i = 0; i < args.length; i++) {
-            String[] words = args[i].split("=");
-            variables.put(words[0].trim(), Double.parseDouble(words[1]));
+    /* Constructor */
+    public Variables(String[] args) {
+        if(args.length > 1) {
+            variables = parseVariables(args);
         }
+        else {
+            variables = null;
+            System.out.println("Nothing to parse for variables");
+        }
+    }
+
+    /*******************************************************************************************************************
+     *
+     * @return parsed map of variables values
+     */
+    public HashMap<String, Double> getVariables() {
         return variables;
+    }
+
+    /*******************************************************************************************************************
+     * Method to parse variables
+     * @param args array of strings with expected varibles values
+     * @return map of parsed variables
+     */
+    private static HashMap<String, Double> parseVariables(String[] args) {
+        HashMap<String, Double> vars = new HashMap<>();
+        /* begin parse from index 1 (0 - expression)*/
+        for (int i = 1; i < args.length; i++) {
+            try {
+                String[] words = args[i].split("=");
+                vars.put(words[0].trim(), Double.parseDouble(words[1]));
+            } catch (Exception e) {
+                /* can't split or parse double*/
+                System.out.println("Can't parse argument " + args[i]);
+            }
+        }
+        return vars;
     }
 
 

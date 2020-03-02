@@ -2,98 +2,99 @@ package com.shpp.p2p.cs.bcimbal.assignment10;
 
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static java.lang.System.*;
 
 public class Assignment10Part1 {
 
+    /**/
     private static final String OP_ADD = "+";
     private static final String OP_SUB = "-";
     private static final String OP_MUL = "*";
     private static final String OP_DIV = "/";
     private static final String OP_EXP = "^";
 
-    private static final String OPERATORS = OP_EXP + OP_MUL + OP_DIV + OP_ADD + OP_SUB;
+    /**/
+    private static final String OPERATORS = OP_EXP + OP_MUL + OP_DIV + OP_SUB + OP_ADD;
 //    private static final String OPERATORS = "*/^+-";
 
 
+    public static void main(String[] args) {
 
-    public static void main(String args[]) {
-
-        String[] tmp = new String[args.length - 1];
-        for(int i = 1; i < args.length; i++) {
-            tmp[i-1] = args[i];
+        /* print expression*/
+        out.println("Expression: " + args[0]);
+        /* perform expression parsing */
+        Expression expresionObj = new Expression(args[0]);
+        if (expresionObj.isExpressionValid()) {
+            /* expression parsed successfully*/
+            ArrayList<String> expression = expresionObj.getExpression();
+            out.println(expression);
+            /* perform variables  parsing */
+            Variables varials = new Variables(args);
+            out.println(varials.getVariables());
+            out.println("Result: " + calculate(expression, varials));
         }
-        Variables varials = new Variables(tmp);
-
-
-        ArrayList<String> expression = (new Expression(args[0])).getExpression();
-        out.println(expression);
-        out.println(varials.getVariables());
-        out.println("Result: " + calculate(expression, varials));
+        else {
+            out.println("Can't make calculation");
+        }
     }
 
-
-
-
-
+    /*******************************************************************************************************************
+     * Method to perform calculation of given expression
+     * with  input arguments
+     *
+     * @param splittedExpression expression as ArrayList<String>
+     * @param vars object of parsed variables
+     * @return String result of calculation
+     */
     private static String calculate(ArrayList<String> splittedExpression, Variables vars) {
-        while (splittedExpression.size() > 1) {
-            for (int i = 0; i < OPERATORS.length(); i++) {
-                String op = OPERATORS.charAt(i) + "";
-                int index = getOperatorIndex(op, splittedExpression);
-                while (index >= 0) {
-                    HashMap<Boolean, Double> a = getValue(splittedExpression.get(index - 1), vars);
-                    HashMap<Boolean, Double> b = getValue(splittedExpression.get(index + 1), vars);
-                    if (!a.containsKey(false) & !b.containsKey(false)) {
-                        switch (op) {
-                            case "^":
-                                splittedExpression.set(index - 1, (Math.pow(a.get(true), b.get(true))) + "");
-                                break;
-                            case "*":
-                                splittedExpression.set(index - 1, (a.get(true) * b.get(true)) + "");
-                                break;
-                            case "/":
-                                splittedExpression.set(index - 1, (a.get(true) / b.get(true)) + "");
-                                break;
-                            case "+":
-                                splittedExpression.set(index - 1, (a.get(true) + b.get(true)) + "");
-                                break;
-                            case "-":
-                                splittedExpression.set(index - 1, (a.get(true) - b.get(true)) + "");
-                                break;
-                        }
-                        splittedExpression.remove(index);
-                        splittedExpression.remove(index);
+        if (splittedExpression.size() == 1) {
+            return parseValue(splittedExpression.get(0), vars) + "";
+        } else
+            while (splittedExpression.size() > 1) {
+                for (int i = 0; i < OPERATORS.length(); i++) {
+                    String op = OPERATORS.charAt(i) + "";
+                    int index = getOperatorIndex(op, splittedExpression);
+                    while (index >= 0) {
+                        Double a = parseValue(splittedExpression.get(index - 1), vars);
+                        Double b = parseValue(splittedExpression.get(index + 1), vars);
+                        if (a != null && b != null) {
+                            switch (op) {
+                                case "^":
+                                    splittedExpression.set(index - 1, (Math.pow(a, b)) + "");
+                                    break;
+                                case "*":
+                                    splittedExpression.set(index - 1, (a * b) + "");
+                                    break;
+                                case "/":
+                                    if (b == 0) return "Division by zero";
+                                    splittedExpression.set(index - 1, (a / b) + "");
+                                    break;
+                                case "-":
+                                    splittedExpression.set(index - 1, (a - b) + "");
+                                    break;
+                                case "+":
+                                    splittedExpression.set(index - 1, (a + b) + "");
+                                    break;
+                            }
+                            splittedExpression.remove(index);
+                            splittedExpression.remove(index);
+
+                        } else return "Can't make calculation";
                         index = getOperatorIndex(op, splittedExpression);
                     }
-                    else return "Error in expression";
                 }
             }
-        }
         return splittedExpression.get(0);
     }
 
-
-    static HashMap<Boolean, Double> getValue(String toParse, Variables vars){
-        HashMap<Boolean, Double> parsed = new HashMap<>();
-        try {
-           parsed.put(true, Double.parseDouble(toParse));
-        }
-        catch (Exception e) {
-            if(vars.getVariables().containsKey(toParse)) {
-                parsed.put(true, vars.getVariables().get(toParse));
-            }
-            else {
-                out.println("Variable " + toParse + " not found");
-                parsed.put(false, 0d);
-            }
-        }
-       return parsed;
-    }
-
+    /*******************************************************************************************************************
+     * Method to find index of position of inputted operator
+     *
+     * @param operator String of one char(represent operator)
+     * @param list ArrayList<String> to search in
+     * @return int searched operator index
+     */
     static int getOperatorIndex(String operator, ArrayList<String> list) {
 
         for (int index = 0; index < list.size(); index++) {
@@ -102,5 +103,26 @@ public class Assignment10Part1 {
             }
         }
         return -1;
+    }
+
+    /*******************************************************************************************************************
+     * Method parses current string to Double
+     * if it is not possible tries fo find current string as argument in map of variables
+     * @param value String content to parse
+     * @param vars object containing map of variables
+     * @return Double result of parsing (null, if not parsed and argunent not declared)
+     */
+    static Double parseValue(String value, Variables vars) {
+        Double result = null;
+        try {
+            result = Double.parseDouble(value);
+        } catch (Exception e) {
+            if (vars.getVariables() != null && vars.getVariables().containsKey(value)) {
+                result = vars.getVariables().get(value);
+            } else {
+                out.println("Variable " + value + " not found");
+            }
+        }
+        return result;
     }
 }
