@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public class Assignment11Part1 {
 
     private static final String REX_BRACKET_G = "\\(.+?\\)+";
-    public static final String expr = "sin(a+78)+((a-a)+(2+3)*(4+5-sin(45*cos(a))))/7";
+    public static final String expr = "tan(a+78)+((a-a)+(2+3)*(4+5-sin(45*cos(a))))/7";
 
     public static void main(String[] args){
 
@@ -32,12 +32,37 @@ class Node {
 }
 class BinaryTree {
     private static final String REX_BRACKET = "\\(.+?\\)+";
+    private static final String REX_TRIGONOMETRY = "(cos|sin|tan)#\\d+";
     Node root;
 
     public BinaryTree(String expression){
-        parsedExpr.put("#" + deep, expression);
-        deep++;
+        parsedExpr.put("#" + deep++, expression);
         parseBrackets(0);
+        //parseTrigonometry(0);
+        for(int i =0; i < deep; i++)
+            parseTrigonometry(i, REX_TRIGONOMETRY);
+        System.out.println("123");
+        for(int i =0; i < deep; i++)
+            parseTrigonometry(i, REX_TRIGONOMETRY);
+        System.out.println("123");
+    }
+
+    private void parseTrigonometry(int index, String regex) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(parsedExpr.get("#" + index));
+        while (matcher.find()) {
+            String res = parsedExpr.get("#" + index).substring(matcher.start(), matcher.end());
+            if(parsedExpr.get("#" + index).length() > res.length()) {
+                System.out.println(res);
+                parsedExpr.put("#" + deep, res);//getSubExpression(res, 0, res.length()));
+                for (String s : parsedExpr.keySet()) {
+                    String r = parsedExpr.get("#" + deep);
+                    parsedExpr.put("#" + index, parsedExpr.get("#" + index).replace(r, "#" + deep));
+                }
+                deep++;
+            }
+        }
+
     }
 
     HashMap<String, String> parsedExpr = new HashMap<>();
@@ -49,10 +74,10 @@ class BinaryTree {
         while (matcher.find()) {
             String res = parsedExpr.get("#" + index).substring(matcher.start(), matcher.end());
             System.out.println(res);
-            parsedExpr.put("#" + deep, getSubExpression(res));
+            parsedExpr.put("#" + deep, getSubExpression(res, 1, res.length() - 1));
             deep++;
         }
-        
+
         for(String s: parsedExpr.keySet()) {
             String r = "(" + parsedExpr.get(s) + ")";
             parsedExpr.put("#" + index, parsedExpr.get("#" + index).replace(r, s));
@@ -67,9 +92,9 @@ class BinaryTree {
         }
     }
 
-    private String getSubExpression(String str){
-        int begin = 1;
-        int end = str.length() - 1;
+    private String getSubExpression(String str, int begin, int end){
+        //int begin = 1;
+        //int end = str.length() - 1;
         int lb = 0;
         int rb = 0;
         while (str.charAt(begin) == '(') begin++;
