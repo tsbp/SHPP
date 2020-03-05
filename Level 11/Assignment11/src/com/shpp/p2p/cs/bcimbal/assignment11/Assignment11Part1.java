@@ -38,10 +38,23 @@ class Node {
                 case "+":
                 case "-":
                 case "*":
+                case "/":
+                case "^":
                     String[] a = input.split("\\" + op);
                     tmp.put("operator", op);
                     tmp.put("arg1", a[0]);
                     tmp.put("arg2", a[1]);
+                    break;
+                case "sin":
+                case "cos":
+                case "tan":
+                case "atan":
+                case "log10":
+                case "log2":
+                case "sqrt":
+                    tmp.put("operator", op);
+                    tmp.put("arg1", input.replace(op, ""));
+                    tmp.put("arg2", null);
                     break;
             }
         } else {
@@ -61,6 +74,10 @@ class Node {
                 return argument1.getResult() - argument2.getResult();
             case "*":
                 return argument1.getResult() * argument2.getResult();
+            case "cos":
+                return Math.cos(argument1.getResult());
+            case "sin":
+                return Math.sin(argument1.getResult());
             default:
                 return Double.parseDouble(operator);
         }
