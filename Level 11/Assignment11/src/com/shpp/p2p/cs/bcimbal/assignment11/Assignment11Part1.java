@@ -1,129 +1,81 @@
 package com.shpp.p2p.cs.bcimbal.assignment11;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 public class Assignment11Part1 {
+    public static final String expr = "1+2*cos(3+2*((1.3+1.7)*sin((0.1*100)-7)+(4-3)))";//""tan(a+78)+((a-a)+(2+3)*(4+5-sin(45*cos(a))))/7";
 
-    private static final String REX_BRACKET_G = "\\(.+?\\)+";
-    public static final String expr ="1+2";// "tan(a+78)+((a-a)+(2+3)*(4+5-sin(45*cos(a))))/7";
-
-    public static void main(String[] args){
-
+    public static void main(String[] args) {
         BinaryTree a = new BinaryTree(expr);
-
-
     }
 }
+
 class Node {
     String operator;
     Node argument1;
     Node argument2;
-    public Node (String operator){
-        this.operator = operator;
-        argument1 = null;
-        argument2 = null;
+
+    public Node(String root, HashMap<String, String> map) {
+        HashMap<String, String> tmp;
+        if (root.charAt(0) == '#') tmp = getNodeInfo(map.get(root));
+        else tmp = getNodeInfo(root);
+        this.operator = tmp.get("operator");
+        if (tmp.get("arg1") == null) argument1 = null;
+        else argument1 = new Node(tmp.get("arg1"), map);
+        if (tmp.get("arg2") == null) argument2 = null;
+        else argument2 = new Node(tmp.get("arg2"), map);
     }
 
+    private HashMap<String, String> getNodeInfo(String input) {
+        HashMap<String, String> tmp = new HashMap<>();
+        Pattern pattern = Pattern.compile("(sin|cos|\\+|\\*|-)");
+        Matcher matcher = pattern.matcher(input);
+        if (matcher.find()) {
+            String op = input.substring(matcher.start(), matcher.end());
+            switch (op) {
+                case "+":
+                case "-":
+                case "*":
+                    String[] a = input.split("\\" + op);
+                    tmp.put("operator", op);
+                    tmp.put("arg1", a[0]);
+                    tmp.put("arg2", a[1]);
+                    break;
+            }
+        } else {
+            tmp.put("operator", input);
+            tmp.put("arg1", null);
+            tmp.put("arg2", null);
+        }
 
+        return tmp;
+    }
+
+    public double getResult() {
+        switch (operator) {
+            case "+":
+                return argument1.getResult() + argument2.getResult();
+            case "-":
+                return argument1.getResult() - argument2.getResult();
+            case "*":
+                return argument1.getResult() * argument2.getResult();
+            default:
+                return Double.parseDouble(operator);
+        }
+    }
 }
+
 class BinaryTree {
-    private static final String REX_BRACKET = "\\(.+?\\)+";
-    private static final String REX_TRIGONOMETRY = "(cos|sin|tan)#\\d+";
-    private static final String REX_MUDIVEXP = "#?\\d+(\\^|\\/|\\*)#?\\d+";
-    private static final String REX_PLUSMINUS = "#?\\d+(\\+|\\-)#?\\d+";
     Node root;
 
-    public BinaryTree(String expression){
-        parsedExpr.put("#" + deep++, expression);
-        parseBrackets(0);
-        //parseTrigonometry(0);
-
-        parseNormal(REX_TRIGONOMETRY);
-        System.out.println("123");
-        parseNormal( REX_MUDIVEXP);
-        System.out.println("123");
-        parseNormal(REX_PLUSMINUS);
-        System.out.println("123");
-    }
-
-    private void parseNormal(String regex) {
-        for(int index =0; index < deep; index++) {
-            Pattern pattern = Pattern.compile(regex);
-            Matcher matcher = pattern.matcher(parsedExpr.get("#" + index));
-            while (matcher.find()) {
-                String res = parsedExpr.get("#" + index).substring(matcher.start(), matcher.end());
-                if (parsedExpr.get("#" + index).length() > res.length()) {
-                    System.out.println(res);
-                    parsedExpr.put("#" + deep, res);//getSubExpression(res, 0, res.length()));
-                    for (String s : parsedExpr.keySet()) {
-                        String r = parsedExpr.get("#" + deep);
-                        parsedExpr.put("#" + index, parsedExpr.get("#" + index).replace(r, "#" + deep));
-                    }
-                    deep++;
-                }
-            }
-        }
-    }
-
-    HashMap<String, String> parsedExpr = new HashMap<>();
-    int deep = 0;
-
-    private void parseBrackets(int index) {
-        Pattern pattern = Pattern.compile(REX_BRACKET);
-        Matcher matcher = pattern.matcher(parsedExpr.get("#" + index));
-        while (matcher.find()) {
-            String res = parsedExpr.get("#" + index).substring(matcher.start(), matcher.end());
-            System.out.println(res);
-            parsedExpr.put("#" + deep, getSubExpression(res, 1, res.length() - 1));
-            deep++;
-        }
-
-        for(String s: parsedExpr.keySet()) {
-            String r = "(" + parsedExpr.get(s) + ")";
-            parsedExpr.put("#" + index, parsedExpr.get("#" + index).replace(r, s));
-        }
-
-        if( parsedExpr.get("#" + index).contains("(")) parseBrackets( index);
-        else {
-            for(int i = 0; i < parsedExpr.size(); i++) {
-                while(parsedExpr.get("#" + i).contains("("))
-                    parseBrackets(i);
-            }
-        }
-    }
-
-    private String getSubExpression(String str, int begin, int end){
-        //int begin = 1;
-        //int end = str.length() - 1;
-        int lb = 0;
-        int rb = 0;
-        while (str.charAt(begin) == '(') begin++;
-        for(int i = begin; i < end; i++){
-            if(str.charAt(i) == '(') lb++;
-            if(str.charAt(i) == ')') rb++;
-            if(lb==rb && (lb != 0 && rb!=0)) {
-                end = i + 1;
-                break;
-            }
-        }
-        return str.substring(begin, end);
-    }
-    private Node addRecursive(Node current, String value) {
-        if (current == null) {
-            return new Node(value);
-        }
-
-        current.operator =  value.charAt(1) + "";
-        current.argument1 = addRecursive(current.argument1,value.charAt(0) + "");
-        current.argument2 = addRecursive(current.argument2,value.charAt(2) + "");
-
-        return current;
-    }
-    public void add(String value) {
-        root = addRecursive(root, value);
+    public BinaryTree(String expression) {
+        ExParser pExpression = new ExParser(expression);
+        HashMap<String, String> parsedMap = pExpression.getMap();
+        System.out.println("map: " + parsedMap);
+        root = new Node("#0", parsedMap);
+        double result = root.getResult();
+        System.out.println("Result: " + result);
     }
 }
