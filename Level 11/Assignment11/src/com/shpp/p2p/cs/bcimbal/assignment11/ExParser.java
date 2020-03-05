@@ -6,14 +6,17 @@ import java.util.regex.Pattern;
 
 public class ExParser {
     private static final String REX_BRACKET = "\\([#0-9a-zA-Z+\\-*^\\/.]+\\)";
-    private static final String REX_TRIGONOMETRY = "(cos|sin|tan)#\\d+";
-    private static final String REX_MUDIVEXP = "#?[.0-9a-zA-Z]+(\\^|\\/|\\*)#?[.0-9a-zA-Z]+";
-    private static final String REX_PLUSMINUS = "#?[.0-9a-zA-Z]+(\\+|\\-)#?[.0-9a-zA-Z]+";
+    private static final String REX_TRIGONOMETRY = "(sin|cos|tan|atan|log10|log2|sqrt)#\\d+";
+    private static final String REX_MUDIVEXP = "\\#?[.0-9a-zA-Z#]+(\\^|\\/|\\*)#?[.0-9a-zA-Z#]+";
+    private static final String REX_PLUSMINUS = "\\#?[.0-9a-zA-Z#]+(\\+|\\-)#?[.0-9a-zA-Z#]+";
 
     HashMap<String, String> parsedExpr = new HashMap<>();
     int deep = 0;
 
     public ExParser(String expression) {
+        if(expression.charAt(0) == '-') {
+            expression = "0" + expression;
+        }
         parsedExpr.put("#" + deep++, expression);
         parseBrackets();
         parseNormal(REX_TRIGONOMETRY);
@@ -33,6 +36,8 @@ public class ExParser {
                 String res = parsedExpr.get("#" + index).substring(matcher.start(), matcher.end());
                 if (parsedExpr.get("#" + index).length() > res.length()) {
                     //System.out.println(res);
+//                    if(res.charAt(0) == '-' && res.charAt(1) == '#')
+//                        res = "0" + res;
                     parsedExpr.put("#" + deep, res);
 
                     for (String s : parsedExpr.keySet()) {
@@ -40,6 +45,7 @@ public class ExParser {
                         parsedExpr.put("#" + index, parsedExpr.get("#" + index).replace(r, "#" + deep));
                     }
                     deep++;
+                    matcher = pattern.matcher(parsedExpr.get("#" + index));
                 }
             }
         }
