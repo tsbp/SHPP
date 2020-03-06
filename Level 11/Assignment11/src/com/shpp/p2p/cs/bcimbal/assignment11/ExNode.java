@@ -90,8 +90,17 @@ class ExNode {
                 return (Math.log10(argument1.getResult(vars)) / Math.log10(2));
             case "sqrt":
                 return Math.sqrt(argument1.getResult(vars));
-            default:
-                return Double.parseDouble(operator);
+            default: {
+                double arg;
+                try {
+                    arg = Double.parseDouble(operator);
+                } catch (Exception e) {
+                    arg = vars.get(operator);
+                    System.out.println(operator + " = " + arg);
+                }
+                return arg;
+            }
+
         }
     }
 }

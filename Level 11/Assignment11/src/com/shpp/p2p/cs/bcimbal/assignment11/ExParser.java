@@ -7,7 +7,8 @@ import java.util.regex.Pattern;
 public class ExParser {
     private static final String REX_BRACKET = "\\([#0-9a-zA-Z+\\-*^\\/.]+\\)";
     private static final String REX_TRIGONOMETRY = "(sin|cos|tan|atan|log10|log2|sqrt)#\\d+";
-    private static final String REX_MUDIVEXP = "\\#?[.0-9a-zA-Z#]+(\\^|\\/|\\*)#?[.0-9a-zA-Z#]+";
+    private static final String REX_MUDIVEXP_H = "\\#?[.0-9a-zA-Z#]+\\^#?[.0-9a-zA-Z#]+";
+    private static final String REX_MUDIVEXP_L = "\\#?[.0-9a-zA-Z#]+(\\/|\\*)#?[.0-9a-zA-Z#]+";
     private static final String REX_PLUSMINUS = "\\#?[.0-9a-zA-Z#]+(\\+|\\-)#?[.0-9a-zA-Z#]+";
 
     HashMap<String, String> parsedExpr = new HashMap<>();
@@ -20,7 +21,8 @@ public class ExParser {
         parsedExpr.put("#" + deep++, expression);
         parseBrackets();
         parseNormal(REX_TRIGONOMETRY);
-        parseNormal(REX_MUDIVEXP);
+        parseNormal(REX_MUDIVEXP_H);
+        parseNormal(REX_MUDIVEXP_L);
         parseNormal(REX_PLUSMINUS);
     }
 
