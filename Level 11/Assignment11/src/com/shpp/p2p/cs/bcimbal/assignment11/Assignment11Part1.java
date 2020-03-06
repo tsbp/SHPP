@@ -1,7 +1,5 @@
 package com.shpp.p2p.cs.bcimbal.assignment11;
 
-import java.io.IOException;
-import java.nio.CharBuffer;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -11,8 +9,13 @@ public class Assignment11Part1 {
     public static void main(String[] args) {
         Variables vars = new Variables(args);
         ExTree exTree = new ExTree(expr);
+        if(exTree.getTree() != null) {
+            makeCalculations(exTree, vars);
+        }
+    }
 
-        System.out.println(exTree.getResult(vars.getVariables()));
+    private static void makeCalculations(ExTree tree, Variables vars) {
+        System.out.println(tree.getResult(vars.getVariables()));
         Scanner sc = new Scanner(System.in);
         while(true){
             String in = sc.nextLine();
@@ -21,7 +24,7 @@ public class Assignment11Part1 {
             String[] a = in.split(",");
             vars = new Variables(a);
             HashMap<String, Double> v = vars.getVariables();
-            System.out.println(exTree.getResult(v));
+            System.out.println(tree.getResult(v));
         }
     }
 }

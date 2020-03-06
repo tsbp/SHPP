@@ -11,8 +11,9 @@ public class ExParser {
     private static final String REX_MUDIVEXP_L = "\\#?[.0-9a-zA-Z#]+(\\/|\\*)#?[.0-9a-zA-Z#]+";
     private static final String REX_PLUSMINUS = "\\#?[.0-9a-zA-Z#]+(\\+|\\-)#?[.0-9a-zA-Z#]+";
 
-    HashMap<String, String> parsedExpr = new HashMap<>();
-    int deep = 0;
+    private HashMap<String, String> parsedExpr = new HashMap<>();
+    private int deep = 0;
+    private boolean valid = false;
 
     public ExParser(String expression) {
         if(expression.charAt(0) == '-') {
@@ -20,14 +21,21 @@ public class ExParser {
         }
         parsedExpr.put("#" + deep++, expression);
         parseBrackets();
-        parseNormal(REX_TRIGONOMETRY);
-        parseNormal(REX_MUDIVEXP_H);
-        parseNormal(REX_MUDIVEXP_L);
-        parseNormal(REX_PLUSMINUS);
+        if(valid) {
+            parseNormal(REX_TRIGONOMETRY);
+            parseNormal(REX_MUDIVEXP_H);
+            parseNormal(REX_MUDIVEXP_L);
+            parseNormal(REX_PLUSMINUS);
+        }
+
     }
 
     public HashMap<String, String> getMap() {
         return parsedExpr;
+    }
+
+    public boolean isValid() {
+        return  valid;
     }
 
     private void parseNormal(String regex) {
@@ -37,9 +45,6 @@ public class ExParser {
             while (matcher.find()) {
                 String res = parsedExpr.get("#" + index).substring(matcher.start(), matcher.end());
                 if (parsedExpr.get("#" + index).length() > res.length()) {
-                    //System.out.println(res);
-//                    if(res.charAt(0) == '-' && res.charAt(1) == '#')
-//                        res = "0" + res;
                     parsedExpr.put("#" + deep, res);
 
                     for (String s : parsedExpr.keySet()) {
@@ -54,10 +59,11 @@ public class ExParser {
     }
 
     private void parseBrackets() {
-        while(parsedExpr.get("#0").contains("("))
+        while(parsedExpr.get("#0").contains("(") || parsedExpr.get("#0").contains(")"))
         {
             Pattern pattern = Pattern.compile(REX_BRACKET);
             Matcher matcher = pattern.matcher(parsedExpr.get("#0"));
+            valid = false;
             if (matcher.find()) {
                 String res = parsedExpr.get("#0").substring(matcher.start(), matcher.end());
                 if (parsedExpr.get("#0").length() > res.length()) {
@@ -75,7 +81,14 @@ public class ExParser {
                         parsedExpr.put("#" + deep, tmp.substring(1, tmp.length() - 1));
                     }
                     deep++;
+                    valid = true;
                 }
+            }
+            else {
+                System.out.print("Error in expression. Expected ");
+                if(parsedExpr.get("#0").contains("(") ) System.out.println("\")\".");
+                else if (parsedExpr.get("#0").contains(")") ) System.out.println("\"(\".");
+                return;
             }
         }
     }

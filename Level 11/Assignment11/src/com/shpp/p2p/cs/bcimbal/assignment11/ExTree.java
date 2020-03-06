@@ -6,9 +6,12 @@ class ExTree {
     ExNode root;
     public ExTree(String expression) {
         ExParser pExpression = new ExParser(expression);
-        HashMap<String, String> parsedMap = pExpression.getMap();
-        System.out.println("map: " + parsedMap);
-        root = new ExNode("#0", parsedMap);
+        HashMap<String, String> parsedMap;
+        if(pExpression.isValid()) {
+            parsedMap = pExpression.getMap();
+            System.out.println("map: " + parsedMap);
+            root = new ExNode("#0", parsedMap);
+        }
 
     }
     public ExNode getTree() {

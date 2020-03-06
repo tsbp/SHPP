@@ -19,10 +19,7 @@ class ExNode {
         else argument1 = new ExNode(tmp.get("arg1"), map);
         if (tmp.get("arg2") == null) argument2 = null;
         else argument2 = new ExNode(tmp.get("arg2"), map);
-
     }
-
-
 
     private HashMap<String, String> getNodeInfo(String input) {
         HashMap<String, String> tmp = new HashMap<>();
@@ -63,44 +60,76 @@ class ExNode {
         return tmp;
     }
 
-    public double getResult(HashMap<String, Double> vars) {
-        switch (operator) {
-            case "+":
-                return argument1.getResult(vars) + argument2.getResult(vars);
-            case "-":
-                return argument1.getResult(vars) - argument2.getResult(vars);
-            case "*":
-                return argument1.getResult(vars) * argument2.getResult(vars);
-            case "/":
-                //TODO division by zero
-                return argument1.getResult(vars) / argument2.getResult(vars);
-            case "^":
-                return Math.pow(argument1.getResult(vars), argument2.getResult(vars));
-            case "cos":
-                return Math.cos(argument1.getResult(vars));
-            case "sin":
-                return Math.sin(argument1.getResult(vars));
-            case "tan":
-                return Math.tan(argument1.getResult(vars));
-            case "atan":
-                return Math.atan(argument1.getResult(vars));
-            case "log10":
-                return Math.log10(argument1.getResult(vars));
-            case "log2":
-                return (Math.log10(argument1.getResult(vars)) / Math.log10(2));
-            case "sqrt":
-                return Math.sqrt(argument1.getResult(vars));
-            default: {
-                double arg;
-                try {
-                    arg = Double.parseDouble(operator);
-                } catch (Exception e) {
-                    arg = vars.get(operator);
-                    System.out.println(operator + " = " + arg);
-                }
-                return arg;
-            }
+    public Double getResult(HashMap<String, Double> vars) {
+        //if(argument1.getResult(vars) != null && argument2.getResult(vars) != null) {
 
-        }
+            switch (operator) {
+                case "+":
+
+                    return argument1.getResult(vars) + argument2.getResult(vars);
+
+                case "-":
+
+                    return argument1.getResult(vars) - argument2.getResult(vars);
+
+                case "*":
+
+                    return argument1.getResult(vars) * argument2.getResult(vars);
+
+                case "/":
+
+                    //TODO division by zero
+                    return argument1.getResult(vars) / argument2.getResult(vars);
+
+                case "^":
+
+                    return Math.pow(argument1.getResult(vars), argument2.getResult(vars));
+
+                case "cos":
+
+                    return Math.cos(argument1.getResult(vars));
+
+                case "sin":
+
+                    return Math.sin(argument1.getResult(vars));
+
+                case "tan":
+
+                    return Math.tan(argument1.getResult(vars));
+
+                case "atan":
+
+                    return Math.atan(argument1.getResult(vars));
+
+                case "log10":
+
+                    return Math.log10(argument1.getResult(vars));
+
+                case "log2":
+
+                    return (Math.log10(argument1.getResult(vars)) / Math.log10(2));
+
+                case "sqrt":
+
+                    return Math.sqrt(argument1.getResult(vars));
+
+                default: {
+                    Double arg;
+                    try {
+                        arg = Double.parseDouble(operator);
+                    } catch (Exception e) {
+                        if (vars.containsKey(operator)) {
+                            arg = vars.get(operator);
+                            System.out.println(operator + " = " + arg);
+                        } else {
+                            System.out.println("Variable " + operator + "not found.");
+                            arg = null;
+                        }
+                    }
+                    return arg;
+                }
+            }
+//        }
+//        return null;
     }
 }
