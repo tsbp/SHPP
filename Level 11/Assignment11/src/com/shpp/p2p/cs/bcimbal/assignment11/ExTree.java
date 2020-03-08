@@ -10,14 +10,14 @@ class ExTree {
         if(pExpression.isValid()) {
             parsedMap = pExpression.getMap();
             System.out.println("map: " + parsedMap);
-            root = new ExNode("#0", parsedMap);
+            root = new ExNode("#0", parsedMap, null);
         }
 
     }
     public ExNode getTree() {
         return root;
     }
-    public double getResult(HashMap<String, Double> vars) {
+    public Double getResult(HashMap<String, Double> vars) {
         return root.getResult(vars);
     }
 }

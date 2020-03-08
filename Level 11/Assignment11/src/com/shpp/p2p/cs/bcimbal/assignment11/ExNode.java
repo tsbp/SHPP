@@ -8,22 +8,22 @@ class ExNode {
     String operator;
     ExNode argument1;
     ExNode argument2;
+    ExNode parent;
 
-
-    public ExNode(String root, HashMap<String, String> map) {
+    public ExNode(String root, HashMap<String, String> map, ExNode _parent) {
         HashMap<String, String> tmp;
-        if (root.charAt(0) == '#') tmp = getNodeInfo(map.get(root));
-        else tmp = getNodeInfo(root);
-        this.operator = tmp.get("operator");
-        if (tmp.get("arg1") == null) argument1 = null;
-        else argument1 = new ExNode(tmp.get("arg1"), map);
-        if (tmp.get("arg2") == null) argument2 = null;
-        else argument2 = new ExNode(tmp.get("arg2"), map);
+            if (root.charAt(0) == '#') tmp = getNodeInfo(map.get(root));
+            else tmp = getNodeInfo(root);
+            this.operator = tmp.get("operator");
+            if (tmp.get("arg1") == null) argument1 = null;
+            else argument1 = new ExNode(tmp.get("arg1"), map, this);
+            if (tmp.get("arg2") == null) argument2 = null;
+            else argument2 = new ExNode(tmp.get("arg2"), map, this);
     }
 
     private HashMap<String, String> getNodeInfo(String input) {
         HashMap<String, String> tmp = new HashMap<>();
-        if(input.charAt(0) == '-')
+        if (input.charAt(0) == '-')
             input = input.replaceFirst("-", "!");
 
         Pattern pattern = Pattern.compile("(sin|cos|tan|atan|log10|log2|sqrt|/|\\^|\\+|\\*|-)");
@@ -53,7 +53,7 @@ class ExNode {
                     break;
             }
         } else {
-            tmp.put("operator", input.replaceFirst("!","-"));
+            tmp.put("operator", input.replaceFirst("!", "-"));
             tmp.put("arg1", null);
             tmp.put("arg2", null);
         }
@@ -61,19 +61,14 @@ class ExNode {
     }
 
     public Double getResult(HashMap<String, Double> vars) {
-        //if(argument1.getResult(vars) != null && argument2.getResult(vars) != null) {
-
+        //if(argument1.getResult(vars) == null) return  null;
+        try {
             switch (operator) {
                 case "+":
-
                     return argument1.getResult(vars) + argument2.getResult(vars);
-
                 case "-":
-
                     return argument1.getResult(vars) - argument2.getResult(vars);
-
                 case "*":
-
                     return argument1.getResult(vars) * argument2.getResult(vars);
 
                 case "/":
@@ -122,14 +117,16 @@ class ExNode {
                             arg = vars.get(operator);
                             System.out.println(operator + " = " + arg);
                         } else {
-                            System.out.println("Variable " + operator + "not found.");
+                            System.out.println("Variable " + operator + " not found.");
                             arg = null;
                         }
                     }
                     return arg;
                 }
             }
-//        }
-//        return null;
+        } catch (Exception e) {
+            //System.out.println("Can't make calculations.");
+        }
+        return  null;
     }
 }
