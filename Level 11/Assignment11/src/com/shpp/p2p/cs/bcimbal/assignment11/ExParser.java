@@ -81,7 +81,6 @@ public class ExParser {
                     for (String s : parsedExpr.keySet()) {
                         String r = parsedExpr.get("#" + deep);
                         parsedExpr.put("#0", parsedExpr.get("#0").replace(r, "#" + deep));
-
                     }
                     /* delete outer brackets */
                     if (parsedExpr.get("#" + deep).charAt(0) == '(') {
