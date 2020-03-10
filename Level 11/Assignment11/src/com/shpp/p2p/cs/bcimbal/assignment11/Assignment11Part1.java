@@ -4,16 +4,25 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Assignment11Part1 {
-    public static final String expr = "-2-(-cos(-sin((-3.99+tan(a23d45))))+1)";//"-atan(-1.25)^(-4)+2*cos(3+2*(tan(1.3+1.7)*sin((0.1*10^100)-7)+log2(0.5^3)))";//""tan(a+78)+((a-a)+(2+3)*(4+5-sin(45*cos(a))))/7";
 
+    /*******************************************************************************************************************
+     * Main
+     * @param args String[] program arguments
+     */
     public static void main(String[] args) {
+        System.out.println("Expression: " + args[0]);
         Variables vars = new Variables(args);
-        ExTree exTree = new ExTree(expr.replaceAll(" ", ""));
+        ExTree exTree = new ExTree(args[0].replaceAll(" ", ""));
         if (exTree.getTree() != null) {
             makeCalculations(exTree, vars);
         }
     }
 
+    /*******************************************************************************************************************
+     * Cycle making calculations with user variables
+     * @param tree ExTree tree of expression
+     * @param vars Variables object that stores user variables
+     */
     private static void makeCalculations(ExTree tree, Variables vars) {
         Scanner sc = new Scanner(System.in);
         while (true) {
@@ -23,8 +32,9 @@ public class Assignment11Part1 {
                 System.out.println("Result: " + result);
             } else {
                 System.out.println("Can't make calculations.");
-                vars = new Variables(("," + sc.nextLine()).split(","));
             }
+            System.out.println("To calculate expression with your variables use coma as separator (a=23, abc=-23.5, a23c=58)");
+            vars = new Variables(("," + sc.nextLine()).split(","));
         }
     }
 }

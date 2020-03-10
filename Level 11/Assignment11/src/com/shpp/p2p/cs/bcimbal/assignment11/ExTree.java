@@ -4,17 +4,30 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/***********************************************************************************************************************
+ * Class creates a tree of ExNode objects
+ */
 class ExTree {
     ExNode root;
 
+    /*******************************************************************************************************************
+     * Constructor
+     * @param expression String input expression
+     */
     public ExTree(String expression) {
         ExParser pExpression = new ExParser(expression);
         if (pExpression.isValid()) {
-            System.out.println("map: " + pExpression.getMap());
+           // System.out.println("map: " + pExpression.getMap());
             root = createNode(("#0"), pExpression.getMap());
         }
     }
 
+    /*******************************************************************************************************************
+     * Creating node
+     * @param root String  node info
+     * @param map HashMap of rules to build tree
+     * @return ExNode node
+     */
     private ExNode createNode(String root, HashMap<String, String> map) {
         HashMap<String, String> nInfo;
         ExNode node = null;
@@ -29,8 +42,14 @@ class ExTree {
         return node;
     }
 
+    /*******************************************************************************************************************
+     * Getting node info from string
+     * @param input String text representation of node info
+     * @return HashMap node info
+     */
     private HashMap<String, String> getNodeInfo(String input) {
         HashMap<String, String> tmp = new HashMap<>();
+        /* mark negative value*/
         if (input.charAt(0) == '-')
             input = input.replaceFirst("-", "!");
 
@@ -68,10 +87,19 @@ class ExTree {
         return tmp;
     }
 
+    /*******************************************************************************************************************
+     *
+     * @return ExNode tree of expression
+     */
     public ExNode getTree() {
         return root;
     }
 
+    /*******************************************************************************************************************
+     *
+     * @param vars HashMap of parsed variables for expression
+     * @return Double result (null if can't calculate)
+     */
     public Double getResult(HashMap<String, Double> vars) {
         return root.getResult(vars);
     }

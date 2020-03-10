@@ -2,18 +2,32 @@ package com.shpp.p2p.cs.bcimbal.assignment11;
 
 import java.util.HashMap;
 
+/*******************************************************************************************************************
+ * Class for node of simple math expression "argument1 operator argument2" (a+b etc.)
+ */
 class ExNode {
     String operator;
     ExNode argument1;
     ExNode argument2;
 
+    /*******************************************************************************************************************
+     * Constructor to create node
+     * @param root String node functional
+     * @param arg1 ExNode as argument one
+     * @param arg2 ExNode as argument two
+     */
     public ExNode(String root, ExNode arg1, ExNode arg2) {
         this.operator = root;
         this.argument1 = arg1;
         this.argument2 = arg2;
     }
+
+    /*******************************************************************************************************************
+     * Method to get result of mathematical operations
+     * @param vars map of variables
+     * @return Double result of mathematical operations (null if can't make)
+     */
     public Double getResult(HashMap<String, Double> vars) {
-        //if(argument1.getResult(vars) == null) return  null;
         try {
             switch (operator) {
                 case "+":
@@ -50,7 +64,7 @@ class ExNode {
                             arg = vars.get(operator);
                             System.out.println(operator + " = " + arg);
                         } else {
-                            System.out.println("Variable " + operator + " not found.");
+                            System.out.println("Unknown type of " + operator + ".");
                             arg = null;
                         }
                     }
