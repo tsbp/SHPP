@@ -12,7 +12,7 @@ public class Assignment13Part1 {
 
     private static ArrayList<HashMap<Point, Boolean>> silhouettes = new ArrayList<>();
 
-    private static final double LUMINANCE_THRESHOLD = 50;
+    private static final double LUMINANCE_THRESHOLD = 20;
     private static final double MIN_SILHOUETTE_SIZE = 100;
     //    -Xss128m
 
@@ -32,7 +32,7 @@ public class Assignment13Part1 {
 
         if (img == null) {
             /* if args are invalid or empty, try to read test.jpg */
-            filepath = "assets\\" + "test.jpg";
+            filepath = "assets\\" + "2a.jpg";
             img = readImageFromFile(filepath);
         }
 
@@ -48,47 +48,62 @@ public class Assignment13Part1 {
      * @return int silhouettes number
      */
     private static int getSilhouettesCount(BufferedImage img) {
-        /* define as background luminance at 0,0 */
-        double bgLuminance = getLuminance(img.getRGB(0, 0));
+//        /* define as background luminance at 0,0 */
+        double bgLumi = getLuminance(img.getRGB(0, 0));
+
         /* proceed each pixel*/
         for (int x = 1; x < img.getWidth() - 1; x++) {
             for (int y = 1; y < img.getHeight() - 1; y++) {
-                double currrentLumi = getLuminance(img.getRGB(x, y));
-                if ((bgLuminance > currrentLumi + LUMINANCE_THRESHOLD) && !belongsTo(x, y, silhouettes)) {
-                    /* found a pixel with luminance less than background */
-                    HashMap<Point, Boolean> silhouette = discoverSilhouette(img, bgLuminance, x, y);
-                    if (silhouette.size() >= MIN_SILHOUETTE_SIZE)
-                        silhouettes.add(silhouette);
+                double pixLumi = getLuminance(img.getRGB(x, y));
+
+                if (!isLuminancesEqual(pixLumi, bgLumi) /*&& !belongsTo(x, y, silhouettes)*/) {
+                    /* found a pixel with luminance not equal background */
+                    if(!belongsTo(x, y, silhouettes)) {
+                        HashMap<Point, Boolean> silhouette = discoverSilhouette(img, bgLumi, x, y);
+                        if (silhouette.size() >= MIN_SILHOUETTE_SIZE) {
+                            silhouettes.add(silhouette);
+
+                        }
+                    }
                 }
             }
         }
         return silhouettes.size();
     }
 
+    private static boolean isLuminancesEqual(double pixLumi, double bgLumi) {
+        if ((pixLumi < bgLumi - LUMINANCE_THRESHOLD)  || (pixLumi > bgLumi + LUMINANCE_THRESHOLD)) {
+            return false;
+        }
+        return true;
+    }
+
+    /* Array to perform searching around pixel */
+    static int[][] searchMatrix = {{1, 0}, /*{1, 1},*/ {0, 1}, /*{-1, 1},*/ {-1, 0}, /*{-1, -1},*/ {0, -1}/*, {1, -1}*/};
     /*******************************************************************************************************************
      * Method to discover silhouette
      *
      * @param image BufferedImage input image object
-     * @param bgLuminance int background luminance
+     * @param bgLumi int background luminance
      * @param xC int x coordinate of current pixel
      * @param yC int y coordinate of current pixel
      * @return HashMap of discovered silhouette
      */
-    private static HashMap<Point, Boolean> discoverSilhouette(BufferedImage image, double bgLuminance, int xC, int yC) {
+    private static HashMap<Point, Boolean> discoverSilhouette(BufferedImage image, double bgLumi, int xC, int yC) {
         HashMap<Point, Boolean> silhouetteMap = new HashMap<>();
         silhouetteMap.put(new Point(xC, yC), true);
 
         /* breadth-first search, BFS */
         ArrayList<Point> queue = new ArrayList<>();
         queue.add(new Point(xC, yC));
-        while(queue.size() > 0) {
+        while (queue.size() > 0) {
             for (int[] matrix : searchMatrix) {
                 int x = queue.get(0).x + matrix[0];
                 int y = queue.get(0).y + matrix[1];
                 /* prevent out of picture bounds*/
                 if ((x > 0 && y > 0) && (x < image.getWidth() && y < image.getHeight())) {
-                    double curLum = getLuminance(image.getRGB(x, y));
-                    if ((bgLuminance > curLum + LUMINANCE_THRESHOLD)
+                    double pixLumi = getLuminance(image.getRGB(x, y));
+                    if (!isLuminancesEqual(pixLumi, bgLumi)
                             && !silhouetteMap.containsKey(new Point(x, y))) {
                         queue.add(new Point(x, y));
                         silhouetteMap.put(new Point(x, y), true);
@@ -98,37 +113,6 @@ public class Assignment13Part1 {
             queue.remove(0);
         }
         return silhouetteMap;
-    }
-
-    /* Array to perform searching around pixel */
-    static int[][] searchMatrix = {{1, 0}, /*{1, 1},*/ {0, 1}, /*{-1, 1},*/ {-1, 0}, /*{-1, -1},*/ {0, -1}/*, {1, -1}*/};
-
-    /*******************************************************************************************************************
-     * Deep first search
-     *
-     * @param coordX int x coordinate of current pixel
-     * @param coordY int y coordinate of current pixel
-     * @param image BufferedImage input image object
-     * @param bgLuminance int background luminance
-     * @param map HashMap of discovered silhouette
-     */
-    private static void dfs(int coordX, int coordY,
-                            BufferedImage image, double bgLuminance,
-                            HashMap<Point, Boolean> map) {
-        map.put(new Point(coordX, coordY), true);
-        /* search not discovered pixels around current pixel*/
-        for (int[] matrix : searchMatrix) {
-            int x = coordX + matrix[0];
-            int y = coordY + matrix[1];
-            /* prevent out of picture bounds*/
-            if ((x > 0 && y > 0) && (x < image.getWidth() && y < image.getHeight())) {
-                double curLum = getLuminance(image.getRGB(x, y));
-                if ((bgLuminance > curLum + LUMINANCE_THRESHOLD)
-                        && !map.containsKey(new Point(x, y))) {
-                    dfs(x, y, image, bgLuminance, map);
-                }
-            }
-        }
     }
 
     /*******************************************************************************************************************
