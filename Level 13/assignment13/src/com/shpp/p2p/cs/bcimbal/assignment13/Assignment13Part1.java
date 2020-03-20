@@ -1,20 +1,23 @@
 package com.shpp.p2p.cs.bcimbal.assignment13;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
-public class Assignment13Part1 {
+public class Assignment13Part1 extends JFrame {
 
     private static ArrayList<HashMap<Point, Boolean>> silhouettes = new ArrayList<>();
 
-    private static final double LUMINANCE_THRESHOLD = 20;
+    private static final double LUMINANCE_THRESHOLD = 10;
     private static final double MIN_SILHOUETTE_SIZE = 100;
     //    -Xss128m
+
 
     /*******************************************************************************************************************
      *
@@ -32,14 +35,17 @@ public class Assignment13Part1 {
 
         if (img == null) {
             /* if args are invalid or empty, try to read test.jpg */
-            filepath = "assets\\" + "2a.jpg";
+            filepath = "assets\\" + "animal.jpg";
             img = readImageFromFile(filepath);
         }
 
         if (img != null) {
             System.out.println("Silhouettes count (" + filepath + "): " + getSilhouettesCount(img));
         }
+
+        showDiscovered(img);
     }
+
 
     /*******************************************************************************************************************
      * Method to count silhouettes
@@ -58,28 +64,23 @@ public class Assignment13Part1 {
 
                 if (!isLuminancesEqual(pixLumi, bgLumi) /*&& !belongsTo(x, y, silhouettes)*/) {
                     /* found a pixel with luminance not equal background */
-                    if(!belongsTo(x, y, silhouettes)) {
+                    if (!belongsTo(x, y, silhouettes)) {
                         HashMap<Point, Boolean> silhouette = discoverSilhouette(img, bgLumi, x, y);
                         if (silhouette.size() >= MIN_SILHOUETTE_SIZE) {
                             silhouettes.add(silhouette);
-
                         }
                     }
                 }
+//                else
+//                    bgLumi = getLuminance(img.getRGB(x, y));
             }
         }
         return silhouettes.size();
     }
 
-    private static boolean isLuminancesEqual(double pixLumi, double bgLumi) {
-        if ((pixLumi < bgLumi - LUMINANCE_THRESHOLD)  || (pixLumi > bgLumi + LUMINANCE_THRESHOLD)) {
-            return false;
-        }
-        return true;
-    }
-
     /* Array to perform searching around pixel */
     static int[][] searchMatrix = {{1, 0}, /*{1, 1},*/ {0, 1}, /*{-1, 1},*/ {-1, 0}, /*{-1, -1},*/ {0, -1}/*, {1, -1}*/};
+
     /*******************************************************************************************************************
      * Method to discover silhouette
      *
@@ -105,14 +106,22 @@ public class Assignment13Part1 {
                     double pixLumi = getLuminance(image.getRGB(x, y));
                     if (!isLuminancesEqual(pixLumi, bgLumi)
                             && !silhouetteMap.containsKey(new Point(x, y))) {
-                        queue.add(new Point(x, y));
-                        silhouetteMap.put(new Point(x, y), true);
+                        Point p = new Point(x, y);
+                        queue.add(p);
+                        silhouetteMap.put(p, true);
                     }
                 }
             }
             queue.remove(0);
         }
         return silhouetteMap;
+    }
+
+    private static boolean isLuminancesEqual(double pixLumi, double bgLumi) {
+        if ((pixLumi < bgLumi - LUMINANCE_THRESHOLD) || (pixLumi > bgLumi + LUMINANCE_THRESHOLD)) {
+            return false;
+        }
+        return true;
     }
 
     /*******************************************************************************************************************
@@ -159,5 +168,26 @@ public class Assignment13Part1 {
             img = null;
         }
         return img;
+    }
+
+    private static  void showDiscovered(BufferedImage img) {
+        BufferedImage bi = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D gr = bi.createGraphics();
+        for (HashMap<Point, Boolean> silhouette : silhouettes) {
+            gr.setColor(new Color((int) (Math.random() * 0x1000000)));
+
+            for (Point p : silhouette.keySet()) {
+                gr.drawLine(p.x, p.y, p.x, p.y);
+            }
+        }
+        ImageIcon icon = new ImageIcon(bi);
+        JFrame frame = new JFrame();
+        frame.setLayout(new FlowLayout());
+        frame.setSize(bi.getWidth(), bi.getHeight());
+        JLabel lbl = new JLabel();
+        lbl.setIcon(icon);
+        frame.add(lbl);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }
