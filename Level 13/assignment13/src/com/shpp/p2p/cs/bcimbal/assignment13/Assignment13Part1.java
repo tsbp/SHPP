@@ -35,15 +35,51 @@ public class Assignment13Part1 extends JFrame {
 
         if (img == null) {
             /* if args are invalid or empty, try to read test.jpg */
-            filepath = "assets\\" + "animal.jpg";
+            filepath = "assets\\" + "children.jpg";
             img = readImageFromFile(filepath);
         }
 
         if (img != null) {
             System.out.println("Silhouettes count (" + filepath + "): " + getSilhouettesCount(img));
         }
+        ArrayList<HashMap<Point, Boolean>> contours = new ArrayList<>();
+        for (HashMap<Point, Boolean> silhouette : silhouettes) {
+            contours.add(getContour(silhouette, new HashMap<>()));
+        }
 
-        showDiscovered(img);
+        for (int n = 0; n < 2; n++) {
+            /* reduce silhouettes */
+            for (int i = 0; i < contours.size(); i++) {
+                for (Point p : contours.get(i).keySet()) {
+                    silhouettes.get(i).remove(p);
+                }
+            }
+
+            /* increase contour*/
+            for (int i = 0; i < silhouettes.size(); i++) {
+                HashMap<Point, Boolean> cont = getContour(silhouettes.get(i), contours.get(i));
+                for (Point pix : cont.keySet()) {
+                    contours.get(i).put(pix, cont.get(pix));
+                }
+            }
+        }
+
+        showDiscovered(img.getWidth(), img.getHeight(), contours);
+
+    }
+
+
+    private static HashMap<Point, Boolean> getContour(HashMap<Point, Boolean> silh, HashMap<Point, Boolean> contr) {
+        for (Point pix : silh.keySet()) {
+            for (int[] matrix : searchMatrix) {
+                if (!silh.containsKey(new Point(pix.x + matrix[0], pix.y + matrix[1]))) {
+                    /*if (!contr.containsKey(pix))*/ {
+                        contr.put(pix, silh.get(pix));
+                    }
+                }
+            }
+        }
+        return contr;
     }
 
 
@@ -79,7 +115,7 @@ public class Assignment13Part1 extends JFrame {
     }
 
     /* Array to perform searching around pixel */
-    static int[][] searchMatrix = {{1, 0}, /*{1, 1},*/ {0, 1}, /*{-1, 1},*/ {-1, 0}, /*{-1, -1},*/ {0, -1}/*, {1, -1}*/};
+    static int[][] searchMatrix = {{1, 0}, /*{1, 1},*/ {0, 1}, /*{-1, 1},*/ {-1, 0},/* {-1, -1},*/ {0, -1},/* {1, -1}*/};
 
     /*******************************************************************************************************************
      * Method to discover silhouette
@@ -170,9 +206,10 @@ public class Assignment13Part1 extends JFrame {
         return img;
     }
 
-    private static  void showDiscovered(BufferedImage img) {
-        BufferedImage bi = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
+    private static void showDiscovered(int width, int height, ArrayList<HashMap<Point, Boolean>> mapMass) {
+        BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D gr = bi.createGraphics();
+
         for (HashMap<Point, Boolean> silhouette : silhouettes) {
             gr.setColor(new Color((int) (Math.random() * 0x1000000)));
 
@@ -180,6 +217,17 @@ public class Assignment13Part1 extends JFrame {
                 gr.drawLine(p.x, p.y, p.x, p.y);
             }
         }
+
+        for (HashMap<Point, Boolean> silhouette : mapMass) {
+            gr.setColor(new Color((int) (Math.random() * 0x1000000)));
+
+            for (Point p : silhouette.keySet()) {
+                gr.drawLine(p.x, p.y, p.x, p.y);
+            }
+        }
+
+
+
         ImageIcon icon = new ImageIcon(bi);
         JFrame frame = new JFrame();
         frame.setLayout(new FlowLayout());
