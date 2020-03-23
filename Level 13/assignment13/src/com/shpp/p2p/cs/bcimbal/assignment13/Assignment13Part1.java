@@ -48,18 +48,59 @@ public class Assignment13Part1 extends JFrame {
 
         if (img == null) {
             /* if args are invalid or empty, try to read test.jpg */
-            filepath = "assets\\" + "test.jpg";
+            filepath = "assets\\" + "children.jpg";
             img = readImageFromFile(filepath);
         }
 
         if (img != null) {
+            /* check if image has alpha channel */
+            if (img.getColorModel().hasAlpha()) {
+                System.out.println("Has alpha");
+                img = removeAlpha(img);
+            }
             System.out.println("Silhouettes count (" + filepath + "): " + getSilhouettesCount(img));
         }
 
         ArrayList<HashMap<Point, Integer>> contours = new ArrayList<>();
-        countourize(silhouettes, contours, 4);
+        countourize(silhouettes, contours, 1);
+        //---------------------------------------------------------------
+        BufferedImage bi = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics2D gr = bi.createGraphics();
+
+        gr.setColor(Color.WHITE);
+        gr.fillRect(0, 0, img.getWidth(), img.getHeight());
+        for (HashMap<Point, Integer> silhouette : silhouettes) {
+
+            for (Point p : silhouette.keySet()) {
+                gr.setColor(new Color(silhouette.get(p)));
+                gr.drawLine(p.x, p.y, p.x, p.y);
+            }
+        }
+        gr.dispose();
+
+        silhouettes = new ArrayList<>();
+        if (bi != null) {
+            System.out.println("Silhouettes count (" + filepath + "): " + getSilhouettesCount(bi));
+        }
+        //---------------------------------------------------------------
 
         showDiscovered(img.getWidth(), img.getHeight(), contours);
+    }
+
+    /*******************************************************************************************************************
+     * Remove alpha channel from image
+     *
+     * @param img image to remove alpha channel
+     * @return image without alpha channel
+     */
+    private static BufferedImage removeAlpha(BufferedImage img) {
+        BufferedImage nonAlpha = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics2D tmp = nonAlpha.createGraphics();
+        tmp.setColor(Color.WHITE); // Or what ever fill color you want...
+        tmp.fillRect(0, 0, nonAlpha.getWidth(), nonAlpha.getHeight());
+        tmp.drawImage(img, 0, 0, null);
+        tmp.dispose();
+        return nonAlpha;
     }
 
     /*******************************************************************************************************************
@@ -132,17 +173,19 @@ public class Assignment13Part1 extends JFrame {
      * @return int silhouettes number
      */
     private static int getSilhouettesCount(BufferedImage img) {
-//        /* define as background luminance at 0,0 */
-        int bgColor = img.getRGB(0, 0);
+//        /* define as background luminance at bottom right pixel */
+        int bgColor = img.getRGB(img.getWidth() - 1, img.getHeight() - 1);
+
+
         /* proceed each pixel*/
         for (int x = 1; x < img.getWidth() - 1; x++) {
             for (int y = 1; y < img.getHeight() - 1; y++) {
                 double pixLumi = getLuminance(img.getRGB(x, y));
                 if (!isLuminancesEqual(pixLumi, getLuminance(bgColor)) && !belongsTo(x, y, silhouettes)) {
                     /* found a pixel with luminance not equal background */
-                        HashMap<Point, Integer> silhouette = discoverSilhouette(img, bgColor, x, y);
-                        if (silhouette.size() >= MIN_SILHOUETTE_SIZE) {
-                            silhouettes.add(silhouette);
+                    HashMap<Point, Integer> silhouette = discoverSilhouette(img, bgColor, x, y);
+                    if (silhouette.size() >= MIN_SILHOUETTE_SIZE) {
+                        silhouettes.add(silhouette);
                     }
                 }
 //                else
@@ -169,6 +212,7 @@ public class Assignment13Part1 extends JFrame {
         LinkedList<Point> queue = new LinkedList<>();
         queue.add(new Point(xC, yC));
         while (queue.size() > 0) {
+            int index = 0;
             for (int[] matrix : searchMatrix) {
                 int x = queue.get(0).x + matrix[0];
                 int y = queue.get(0).y + matrix[1];
@@ -179,11 +223,12 @@ public class Assignment13Part1 extends JFrame {
                     if (!isLuminancesEqual(pixLumi, getLuminance(bgColor))
                             && !silhouetteMap.containsKey(p)) {
                         queue.add(p);
+                        //index++;
                         silhouetteMap.put(p, image.getRGB(x, y));
                     }
                 }
             }
-            queue.remove(0);
+            queue.remove(index);
         }
         return silhouetteMap;
     }
@@ -247,22 +292,19 @@ public class Assignment13Part1 extends JFrame {
         return img;
     }
 
-    /**
+    /*******************************************************************************************************************
+     * Visualise proceeded images
      *
-     * @param width
-     * @param height
-     * @param mapMass
+     * @param width int image width
+     * @param height int image width
+     * @param mapMass list of images maps
      */
     private static void showDiscovered(int width, int height, ArrayList<HashMap<Point, Integer>> mapMass) {
-        BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D gr = bi.createGraphics();
+        BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics gr = bi.createGraphics();
 
-        for (HashMap<Point, Integer> silhouette : silhouettes) {
-            for (Point p : silhouette.keySet()) {
-                gr.setColor(new Color(silhouette.get(p)));
-                gr.drawLine(p.x, p.y, p.x, p.y);
-            }
-        }
+        gr.setColor(Color.WHITE);
+        gr.fillRect(0, 0, width, height);
 
         for (HashMap<Point, Integer> silhouette : mapMass) {
             gr.setColor(new Color((int) (Math.random() * 0x1000000)));
@@ -272,14 +314,42 @@ public class Assignment13Part1 extends JFrame {
             }
         }
 
-        ImageIcon icon = new ImageIcon(bi);
+        for (int i = 0; i < silhouettes.size(); i++) {
+
+            for (Point p : silhouettes.get(i).keySet()) {
+                gr.setColor(new Color(silhouettes.get(i).get(p)));
+                gr.drawLine(p.x, p.y, p.x, p.y);
+
+            }
+            Point cp = getCenterPoint(silhouettes.get(i));
+            gr.setColor(Color.green);
+            gr.setFont(new Font("Courier", 0, 40));
+            gr.drawString("" + (i + 1), cp.x, cp.y);
+        }
+        gr.dispose();
+
+
         JFrame frame = new JFrame();
         frame.setLayout(new FlowLayout());
-        frame.setSize(bi.getWidth(), bi.getHeight());
+        frame.setSize(bi.getWidth() + 30, bi.getHeight() + 100);
         JLabel lbl = new JLabel();
-        lbl.setIcon(icon);
+        lbl.setIcon(new ImageIcon(bi));
         frame.add(lbl);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    private static Point getCenterPoint(HashMap<Point, Integer> map) {
+        int maxx = 0;
+        int maxy = 0;
+        int minx = 100000;
+        int miny = 100000;
+        for (Point p : map.keySet()) {
+            if (p.x > maxx) maxx = p.x;
+            if (p.x < minx) minx = p.x;
+            if (p.y > maxy) maxy = p.y;
+            if (p.y < miny) miny = p.y;
+        }
+        return new Point((maxx + minx) / 2, (maxy + miny) / 2);
     }
 }
