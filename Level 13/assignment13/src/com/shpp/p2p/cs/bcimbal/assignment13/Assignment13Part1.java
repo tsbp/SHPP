@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 
 /*******************************************************************************************************************
  * The class counts the number of silhouettes in the picture
@@ -18,13 +17,12 @@ import java.util.Map;
 
 public class Assignment13Part1 extends JFrame {
 
-    /* Array of discovered silhouettes */
-//    private static ArrayList<HashMap<Point, Integer>> silhouettes/* = new ArrayList<>()*/;
-
     /* The threshold of luminance between silhouettes and background*/
     private static final double LUMINANCE_THRESHOLD = 20;
-    private static final double MIN_SILHOUETTE_SIZE = 100;
-
+    /* minimum silhouette size as a percentage of the image size */
+    private static final double MIN_SILHOUETTE_SIZE = 0.1;
+    /* contour depth */
+    private static final int CONTOUR_DEPTH = 1;
     /* Array to perform searching around pixel */
     private static final int[][] searchMatrix = {
             {1, 0}, {1, 1}, {0, 1}, {-1, 1},
@@ -46,19 +44,29 @@ public class Assignment13Part1 extends JFrame {
                 System.out.print("Has alpha. ");
                 img = removeAlpha(img);
             }
-            ArrayList<HashMap<Point, Integer>> silhouettes = getSilhouettesCount(img);
+            /* count silhouettes in original image*/
+            ArrayList<HashMap<Point, Integer>> silhouettes = getSilhouettes(img);
             System.out.print("Silhouettes count: " + silhouettes.size());
 
             ArrayList<HashMap<Point, Integer>> contours = new ArrayList<>();
-            countourize(silhouettes, contours, 1);
-            //---------------------------------------------------------------
-            silhouettes = getSilhouettesCount(getImageFrom(img.getWidth(), img.getHeight(), silhouettes));
-            System.out.println(". After unsticking: " + silhouettes.size());
-
+            if(CONTOUR_DEPTH > 0) {
+                /* outline silhouettes (pseudo unsticking)*/
+                countourize(silhouettes, contours, CONTOUR_DEPTH);
+                /* count silhouette after pseudo unsticking */
+                silhouettes = getSilhouettes(getImageFrom(silhouettes, img.getWidth(), img.getHeight()));
+                System.out.println(". After unsticking: " + silhouettes.size());
+            }
+            /* visualization of the result */
             showDiscovered(img.getWidth(), img.getHeight(), contours, silhouettes);
         }
     }
 
+    /*******************************************************************************************************************
+     * Read image from file (as input arguments), if not possible try to open default test.jpg
+     *
+     * @param args program arguments
+     * @return BufferedImage as result of reading a file (null, if not possible to read)
+     */
     private static BufferedImage getImageFromArgs(String[] args) {
         String filepath = "";
         BufferedImage img = null;
@@ -70,7 +78,7 @@ public class Assignment13Part1 extends JFrame {
 
         if (img == null) {
             /* if args are invalid or empty, try to read test.jpg */
-            filepath = "assets\\" + "children.jpg";
+            filepath = "assets\\" + "test.jpg";
             img = readImageFromFile(filepath);
         }
         System.out.print("(" + filepath + ") - ");
@@ -78,13 +86,14 @@ public class Assignment13Part1 extends JFrame {
     }
 
     /*******************************************************************************************************************
+     * Create image from input maps
      *
-     * @param width
-     * @param height
-     * @param silhouettes
-     * @return
+     * @param silhouettes ArrayList of silhouettes
+     * @param width output image width
+     * @param height output image height
+     * @return BufferedImage image
      */
-    private static BufferedImage getImageFrom(int width, int height, ArrayList<HashMap<Point, Integer>> silhouettes) {
+    private static BufferedImage getImageFrom(ArrayList<HashMap<Point, Integer>> silhouettes, int width, int height) {
         BufferedImage tmpImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D gr = tmpImage.createGraphics();
 
@@ -123,12 +132,12 @@ public class Assignment13Part1 extends JFrame {
      *
      * @param silhouettes ArrayList of  silhouettes
      * @param contours ArrayList of  contours
-     * @param contourWidth int number of iterations of contourizing
+     * @param contourDepth int number of iterations of contourizing
      */
     private static void countourize(ArrayList<HashMap<Point, Integer>> silhouettes,
                                     ArrayList<HashMap<Point, Integer>> contours,
-                                    int contourWidth) {
-        for (int n = 0; n < contourWidth; n++) {
+                                    int contourDepth) {
+        for (int n = 0; n < contourDepth; n++) {
             boolean first = false;
             if (contours.size() <= 0) {
                 first = true;
@@ -187,11 +196,11 @@ public class Assignment13Part1 extends JFrame {
      * @param img BufferedImage input image object
      * @return int silhouettes number
      */
-    private static ArrayList<HashMap<Point, Integer>> getSilhouettesCount(BufferedImage img) {
+    private static ArrayList<HashMap<Point, Integer>> getSilhouettes(BufferedImage img) {
         ArrayList<HashMap<Point, Integer>> tmpSilhouettes = new ArrayList<>();
-//        /* define as background luminance at bottom right pixel */
+        /* define as background luminance at bottom right pixel */
         int bgColor = img.getRGB(img.getWidth() - 1, img.getHeight() - 1);
-
+        int minSilhSize = getMinSilhouetteSize(img.getWidth(), img.getHeight());
 
         /* proceed each pixel*/
         for (int x = 1; x < img.getWidth() - 1; x++) {
@@ -200,7 +209,7 @@ public class Assignment13Part1 extends JFrame {
                 if (!isLuminancesEqual(pixLumi, getLuminance(bgColor)) && !belongsTo(x, y, tmpSilhouettes)) {
                     /* found a pixel with luminance not equal background */
                     HashMap<Point, Integer> silhouette = discoverSilhouette(img, bgColor, x, y);
-                    if (silhouette.size() >= MIN_SILHOUETTE_SIZE) {
+                    if (silhouette.size() >= minSilhSize) {
                         tmpSilhouettes.add(silhouette);
                     }
                 }
@@ -208,7 +217,18 @@ public class Assignment13Part1 extends JFrame {
 //                    bgColor = img.getRGB(x, y);
             }
         }
-        return tmpSilhouettes/*.size()*/;
+        return tmpSilhouettes;
+    }
+
+    /*******************************************************************************************************************
+     * Get minimum silhouette size
+     *
+     * @param width  image width
+     * @param height image height
+     * @return minimum silhouette size as a predefined percentage of the image size
+     */
+    private static int getMinSilhouetteSize(int width, int height) {
+        return (int)(((width * height) / 100) * MIN_SILHOUETTE_SIZE);
     }
 
     /*******************************************************************************************************************
@@ -223,28 +243,28 @@ public class Assignment13Part1 extends JFrame {
     private static HashMap<Point, Integer> discoverSilhouette(BufferedImage image, int bgColor, int xC, int yC) {
         HashMap<Point, Integer> silhouetteMap = new HashMap<>();
         silhouetteMap.put(new Point(xC, yC), image.getRGB(xC, yC));
+        double bgLumi = getLuminance(bgColor);
 
         /* breadth-first search, BFS */
         LinkedList<Point> queue = new LinkedList<>();
         queue.add(new Point(xC, yC));
         while (queue.size() > 0) {
-            int index = 0;
+            Point currentPixel = queue.getFirst();
+            queue.removeFirst();
             for (int[] matrix : searchMatrix) {
-                int x = queue.get(0).x + matrix[0];
-                int y = queue.get(0).y + matrix[1];
+                int x = currentPixel.x + matrix[0];
+                int y = currentPixel.y + matrix[1];
                 /* prevent out of picture bounds*/
                 if ((x > 0 && y > 0) && (x < image.getWidth() && y < image.getHeight())) {
                     double pixLumi = getLuminance(image.getRGB(x, y));
                     Point p = new Point(x, y);
-                    if (!isLuminancesEqual(pixLumi, getLuminance(bgColor))
+                    if (!isLuminancesEqual(pixLumi, bgLumi)
                             && !silhouetteMap.containsKey(p)) {
-                        queue.add(p);
-                        //index++;
                         silhouetteMap.put(p, image.getRGB(x, y));
+                        queue.addLast(p);    //TODO replace to queue.addFirst(p) to use Depth-first search algorithm
                     }
                 }
             }
-            queue.remove(index);
         }
         return silhouetteMap;
     }
@@ -334,7 +354,7 @@ public class Assignment13Part1 extends JFrame {
         }
 
         for (int i = 0; i < map2.size(); i++) {
-
+            //gr.setColor(new Color((int) (Math.random() * 0x1000000)));
             for (Point p : map2.get(i).keySet()) {
                 gr.setColor(new Color(map2.get(i).get(p)));
                 gr.drawLine(p.x, p.y, p.x, p.y);
@@ -347,7 +367,6 @@ public class Assignment13Part1 extends JFrame {
         }
         gr.dispose();
 
-
         JFrame frame = new JFrame();
         frame.setLayout(new FlowLayout());
         frame.setSize(bi.getWidth() + 30, bi.getHeight() + 100);
@@ -358,6 +377,11 @@ public class Assignment13Part1 extends JFrame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    /*******************************************************************************************************************
+     * Find center point of image map
+     * @param map image map
+     * @return Point center point
+     */
     private static Point getCenterPoint(HashMap<Point, Integer> map) {
         int maxx = 0;
         int maxy = 0;
