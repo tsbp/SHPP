@@ -9,9 +9,9 @@ public class Unpacker {
     private byte[] charTable;
     private byte[] data;
 
-    Unpacker(String fileiIn, String fileOut) {
+    Unpacker(String fileIn, String fileOut) {
         try {
-            FileInputStream stream = new FileInputStream(fileiIn);
+            FileInputStream stream = new FileInputStream(fileIn);
             byte[] bufferInfo = new byte[12];
             stream.read(bufferInfo);
 
@@ -19,62 +19,64 @@ public class Unpacker {
             charTable = new byte[charTableSize];
             stream.read(charTable);
 
-            data = new byte[stream.available()];
-            stream.read(data);
-            //unpack(fileOut, stream, charTable);
+            data = unpack(fileOut, stream, charTable).getBytes();
 
         } catch (IOException e) {
 
         }
     }
 
-//    private static String unpack (String file, FileInputStream stream, /*byte[] input,*/ byte[] charTable){
-//        int bitsCount = Helper.getBitsCount(charTable.length);
-//        StringBuilder out = new StringBuilder("");
-//        //----------------------------------------------------------------------------------------
-//        try {
-//            int bytesToRead = Helper.IO_BUFFER_SIZE;
-//            while (bytesToRead > 0) {
-//                byte[] buffer = new byte[bytesToRead];
-//                stream.read(buffer);
-//                for (byte ch : buffer) {
-////                if (!tmp.containsKey((char)ch)) {
-////                    tmp.put((char)ch, totalUnicumChars);
-////                    totalUnicumChars++;
-////                }
-//                }
-//                bytesToRead = stream.available();
-//                if (bytesToRead > 0 && bytesToRead < Helper.IO_BUFFER_SIZE) bytesToRead = Helper.IO_BUFFER_SIZE;
-//            }
-//        }
-//        catch (IOException e) {
-//
-//        }
-//        //----------------------------------------------------------------------------------------
-//        LinkedList<Boolean> charSeparator = new LinkedList<>();
-//        for (byte b : input) {
-//            for (int n = 0; n < 8; n++) {
-//                if ((b & (1 << n)) != 0) {
-//                    charSeparator.add(true);
-//                } else {
-//                    charSeparator.add(false);
-//                }
-//                //-------------------------------------------------------
-//                if (charSeparator.size() >= bitsCount) {
-//                    int code = 0;
-//                    for (int k = 0; k < bitsCount; k++) {
-//                        if (charSeparator.getFirst()) {
-//                            code = (char) (code | (1 << k));
-//                        }
-//                        charSeparator.removeFirst();
-//                    }
-//                    out.append((char) charTable[code]);
-//                }
-//            }
-//        }
-//        System.out.println("Before unpacking: " + input.length + ". After: " + out.length());
-//        return out.toString();
-//    }
+    private  String unpack (String file, FileInputStream stream, byte[] charTable){
+        int bitsCount = Helper.getBitsCount(charTable.length);
+        StringBuilder out = new StringBuilder("");
+        //----------------------------------------------------------------------------------------
+        int totalBytes = Helper.IO_BUFFER_SIZE;
+        try {
+            int bytesToRead = stream.available();
+            if (bytesToRead > Helper.IO_BUFFER_SIZE) bytesToRead = Helper.IO_BUFFER_SIZE;
+
+            LinkedList<Boolean> charSeparator = new LinkedList<>();
+            while (bytesToRead > 0) {
+                byte[] buffer = new byte[bytesToRead];
+                stream.read(buffer);
+                collectData(charSeparator, buffer, charTable, bitsCount, out);
+                bytesToRead = stream.available();
+                if (bytesToRead > Helper.IO_BUFFER_SIZE) bytesToRead = Helper.IO_BUFFER_SIZE;
+                totalBytes += bytesToRead;
+            }
+            stream.close();
+        }
+        catch (IOException e) {
+
+        }
+
+        System.out.println("Before unpacking: " + totalBytes + ". After: " + out.length());
+        return out.toString();
+    }
+
+    private void collectData(LinkedList<Boolean> charSeparator, byte[] buffer, byte[] charTable, int bitsCount, StringBuilder out) {
+
+            for (byte b : buffer) {
+                for (int n = 0; n < 8; n++) {
+                    if ((b & (1 << n)) != 0) {
+                        charSeparator.add(true);
+                    } else {
+                        charSeparator.add(false);
+                    }
+                    //-------------------------------------------------------
+                    if (charSeparator.size() >= bitsCount) {
+                        int code = 0;
+                        for (int k = 0; k < bitsCount; k++) {
+                            if (charSeparator.getFirst()) {
+                                code = (char) (code | (1 << k));
+                            }
+                            charSeparator.removeFirst();
+                        }
+                        out.append((char) charTable[code]);
+                    }
+                }
+            }
+    }
 
     public byte [] getCharTable() {
         return charTable;
