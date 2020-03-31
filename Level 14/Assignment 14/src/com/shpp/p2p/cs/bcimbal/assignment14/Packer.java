@@ -2,126 +2,78 @@ package com.shpp.p2p.cs.bcimbal.assignment14;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Packer {
+
+    private int totalBytes = 0;
+
     /**
-     *
      * @param
      */
     Packer(String fileIn, String fileOut) {
 
-        String outString = "";
-        try {
-            outString = new String(Files.readAllBytes(Paths.get(fileIn)));
-        } catch (Exception ignored) {
-
-        }
+        double efficiency = Helper.getFileInfo("Input file size in bytes:", fileIn);
+        long sysTime = System.currentTimeMillis();
 
         HashMap<Character, Integer> charTableAsMap = getCharTable(fileIn);
-        byte [] charTableAsArray = convertToArray(charTableAsMap);
+        packToFile(fileOut, fileIn, charTableAsMap);
 
-        byte[] packed = pack(outString.getBytes(), charTableAsMap);
-        byte[] fileInfo = getFileInfo(charTableAsArray.length, outString.length());
-        writeFile(fileOut, fileInfo, charTableAsArray, packed);
+        sysTime = System.currentTimeMillis() - sysTime;
+
+        System.out.println("Efficiency: " + efficiency /
+                (double)Helper.getFileInfo("Packing time: " + sysTime +
+                "ms.\r\nOutput file size in bytes:", fileOut));
     }
-    /**
-     *
-     * @param fileInfo
-     * @param tableArray
-     * @param packed
-     */
-    private static void writeFile(String file, byte[] fileInfo, byte[] tableArray, byte[] packed) {
+
+    private void packToFile(String fileOut, String fileIn, HashMap<Character, Integer> charTableAsMap) {
+        int bitsCount = Helper.getBitsCount(convertToArray(charTableAsMap).length);
         try {
-            FileOutputStream f1 = new FileOutputStream(file);
-            f1.write(fileInfo);
-            f1.write(tableArray);
-            f1.write(packed);
-            f1.close();
 
-        } catch (IOException е) {
-            System.out.println("UPS");
-        }
-    }
+            FileInputStream streamRead = new FileInputStream(fileIn);
+            FileOutputStream streamWrite = new FileOutputStream(fileOut);
+            byte[] charTableAsArray = convertToArray(charTableAsMap);
+            streamWrite.write(getFileInfo(charTableAsArray.length, totalBytes));
+            streamWrite.write(charTableAsArray);
 
-    /*******************************************************************************************************************
+            //--------------------------------------------------------
+            int bytesToRead = streamRead.available();
+            if (bytesToRead > Helper.IO_BUFFER_SIZE) bytesToRead = Helper.IO_BUFFER_SIZE;
 
-     */
-    private static byte[] getFileInfo ( int tableSize, int packedSize){
-        byte[] out = new byte[12];
-
-        for (int i = 0; i < 4; i++) {
-            out[i] = getByte(i, tableSize);
-        }
-
-        for (int i = 0; i < 8; i++) {
-            out[4 + i] = getByte(i, packedSize);
-        }
-        return out;
-    }
-
-    /*******************************************************************************************************************
-     *
-     * @param number
-     * @param value
-     * @return
-     */
-    private static byte getByte ( int number, long value){
-        return (byte) ((value >> 8 * number) & 0xff);
-    }
-
-    /**
-     *
-     * @param fileName
-     * @return
-     */
-
-    private static HashMap<Character, Integer> getCharTable(String fileName) {
-        int totalUnicumChars = 0;
-        HashMap<Character, Integer> tmp = new HashMap<>();
-        try {
-            FileInputStream stream = new FileInputStream(fileName);
-            int bytesToRead = Helper.IO_BUFFER_SIZE;
-            while(bytesToRead > 0) {
-                byte[] buffer = new byte[bytesToRead];
-                stream.read(buffer);
-                for(byte ch: buffer) {
-                    if (!tmp.containsKey((char)ch)) {
-                        tmp.put((char)ch, totalUnicumChars);
-                        totalUnicumChars++;
-                    }
+            LinkedList<Byte> writeBuffer = new LinkedList<>();
+            LinkedList<Boolean> byteSeparator = new LinkedList<>();
+            while (bytesToRead > 0) {
+                byte[] readBuffer = new byte[bytesToRead];
+                streamRead.read(readBuffer);
+                collectData(byteSeparator, readBuffer, charTableAsMap, bitsCount, writeBuffer);
+                if (writeBuffer.size() >= Helper.IO_BUFFER_SIZE) {
+                    Helper.writeBufferToFile(streamWrite, writeBuffer, Helper.IO_BUFFER_SIZE);
                 }
-                bytesToRead = stream.available();
-                if(/*bytesToRead > 0 && */bytesToRead > Helper.IO_BUFFER_SIZE) bytesToRead = Helper.IO_BUFFER_SIZE;
+                bytesToRead = streamRead.available();
+                if (bytesToRead > Helper.IO_BUFFER_SIZE) bytesToRead = Helper.IO_BUFFER_SIZE;
             }
+            streamRead.close();
+            /* remains bits */
+            if (byteSeparator.size() > 0) {
+                byte[] tmp = {charTableAsArray[0]};
+                collectData(byteSeparator, tmp, charTableAsMap, bitsCount, writeBuffer);
+            }
+            if (writeBuffer.size() > 0) Helper.writeBufferToFile(streamWrite, writeBuffer, writeBuffer.size());
+            streamWrite.close();
+
+
         } catch (IOException e) {
-
+            System.out.println("UPS");
+            e.printStackTrace();
         }
-        return tmp;
     }
 
-    /******************************************************************************************************************/
-    private static byte[] convertToArray(HashMap<Character, Integer> charTable) {
-        byte[] out = new byte[charTable.size()];
-        for (Character ch : charTable.keySet()) {
-            out[charTable.get(ch)] = (byte) (ch & 0xff);
-        }
-        return out;
-    }
-
-
-
-    private static byte[] pack ( byte[] input, HashMap<Character, Integer > charTable){
-        int bitsCount = Helper.getBitsCount(charTable.size());
-        ArrayList<Byte> out = new ArrayList<>();
-        LinkedList<Boolean> byteSeparator = new LinkedList<>();
-        for (byte currentByte : input) {
+    private void collectData(LinkedList<Boolean> byteSeparator, byte[] buffer,
+                             HashMap<Character, Integer> charTable, int bitsCount,
+                             LinkedList<Byte> writeBuffer) {
+        for (byte currentByte : buffer) {
             byte a = (byte) (charTable.get((char) currentByte) & 0xff);
             for (int n = 0; n < bitsCount; n++) {
                 if ((a & (1 << n)) != 0) {
@@ -138,28 +90,68 @@ public class Packer {
                         }
                         byteSeparator.removeFirst();
                     }
-                    out.add(cByte);
+                    writeBuffer.add(cByte);
                 }
             }
         }
-        /* not full byte  */
-        byte cByte = 0;
-        int k = 0;
-        while (byteSeparator.size() > 0) {
-            if (byteSeparator.getFirst()) {
-                cByte = (byte) (cByte | (1 << k));
-            }
-            k++;
-            byteSeparator.removeFirst();
-        }
-        out.add(cByte);
-
-
-        byte[] bOut = new byte[out.size()];
-        for (int i = 0; i < bOut.length; i++) {
-            bOut[i] = out.get(i);
-        }
-        System.out.println("Before packing: " + input.length + ". After: " + bOut.length);
-        return bOut;
     }
+    /*******************************************************************************************************************
+
+     */
+    private static byte[] getFileInfo(int tableSize, int packedSize) {
+        byte[] out = new byte[12];
+
+        for (int i = 0; i < Helper.HEADER_TABLE_SIZE_IN_BYTES; i++) {
+            out[i] = getByte(i, tableSize);
+        }
+
+        for (int i = 0; i < Helper.HEADER_DATA_SIZE_IN_BYTES; i++) {
+            out[4 + i] = getByte(i, packedSize);
+        }
+        return out;
+    }
+
+
+    private static byte getByte(int number, long value) {
+        return (byte) ((value >> 8 * number) & 0xff);
+    }
+
+    private HashMap<Character, Integer> getCharTable(String fileName) {
+        int totalUnicumChars = 0;
+        HashMap<Character, Integer> tmp = new HashMap<>();
+        try {
+            FileInputStream stream = new FileInputStream(fileName);
+            int bytesToRead = stream.available();
+            if (bytesToRead > Helper.IO_BUFFER_SIZE) bytesToRead = Helper.IO_BUFFER_SIZE;
+            totalBytes += bytesToRead;
+            while (bytesToRead > 0) {
+                byte[] buffer = new byte[bytesToRead];
+                stream.read(buffer);
+                for (byte ch : buffer) {
+                    if (!tmp.containsKey((char) ch)) {
+                        tmp.put((char) ch, totalUnicumChars);
+                        totalUnicumChars++;
+                    }
+                }
+                bytesToRead = stream.available();
+                if (bytesToRead > Helper.IO_BUFFER_SIZE) bytesToRead = Helper.IO_BUFFER_SIZE;
+                totalBytes += bytesToRead;
+            }
+        } catch (IOException e) {
+            System.out.println("UPS");
+            e.printStackTrace();
+        }
+        return tmp;
+    }
+
+    /******************************************************************************************************************/
+    private static byte[] convertToArray(HashMap<Character, Integer> charTable) {
+        byte[] out = new byte[charTable.size()];
+        for (Character ch : charTable.keySet()) {
+            out[charTable.get(ch)] = (byte) (ch & 0xff);
+        }
+        return out;
+    }
+
+
 }

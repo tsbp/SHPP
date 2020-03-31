@@ -1,60 +1,75 @@
 package com.shpp.p2p.cs.bcimbal.assignment14;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.LinkedList;
 
 public class Unpacker {
 
-    private byte[] charTable;
-    private byte[] data;
 
     Unpacker(String fileIn, String fileOut) {
         try {
-            FileInputStream stream = new FileInputStream(fileIn);
+            Helper.getFileInfo("Input file size in bytes:", fileIn);
+            long sysTime = System.currentTimeMillis();
+
+            FileInputStream streamRead = new FileInputStream(fileIn);
             byte[] bufferInfo = new byte[12];
-            stream.read(bufferInfo);
+            streamRead.read(bufferInfo);
 
             int charTableSize = getCharTableSize(bufferInfo);
-            charTable = new byte[charTableSize];
-            stream.read(charTable);
+            byte[] charTable = new byte[charTableSize];
+            streamRead.read(charTable);
 
-            data = unpack(fileOut, stream, charTable).getBytes();
+            unpack(fileOut, streamRead, charTable);
+
+            sysTime = System.currentTimeMillis() - sysTime;
+            Helper.getFileInfo("Unpacking time: " + sysTime +
+                    "ms.\r\nOutput file size in bytes:", fileOut);
 
         } catch (IOException e) {
 
         }
     }
 
-    private  String unpack (String file, FileInputStream stream, byte[] charTable){
+    private  void unpack (String file, FileInputStream streamRead, byte[] charTable){
         int bitsCount = Helper.getBitsCount(charTable.length);
-        StringBuilder out = new StringBuilder("");
         //----------------------------------------------------------------------------------------
         int totalBytes = Helper.IO_BUFFER_SIZE;
         try {
-            int bytesToRead = stream.available();
+            FileOutputStream streamWrite = new FileOutputStream(file);
+            LinkedList<Byte> writeBuffer = new LinkedList<>();
+
+            int bytesToRead = streamRead.available();
             if (bytesToRead > Helper.IO_BUFFER_SIZE) bytesToRead = Helper.IO_BUFFER_SIZE;
 
             LinkedList<Boolean> charSeparator = new LinkedList<>();
             while (bytesToRead > 0) {
-                byte[] buffer = new byte[bytesToRead];
-                stream.read(buffer);
-                collectData(charSeparator, buffer, charTable, bitsCount, out);
-                bytesToRead = stream.available();
-                if (bytesToRead > Helper.IO_BUFFER_SIZE) bytesToRead = Helper.IO_BUFFER_SIZE;
+                byte[] readBuffer = new byte[bytesToRead];
+                streamRead.read(readBuffer);
+                collectData(charSeparator, readBuffer, charTable, bitsCount, writeBuffer);
+                if (writeBuffer.size() >= Helper.IO_BUFFER_SIZE) {
+                    Helper.writeBufferToFile(streamWrite, writeBuffer, Helper.IO_BUFFER_SIZE);
+                }
+                bytesToRead = streamRead.available();
+                if (bytesToRead > Helper.IO_BUFFER_SIZE) {
+                    bytesToRead = Helper.IO_BUFFER_SIZE;
+                }
                 totalBytes += bytesToRead;
             }
-            stream.close();
+            streamRead.close();
+            if (writeBuffer.size() > 0) {
+                Helper.writeBufferToFile(streamWrite, writeBuffer, writeBuffer.size());
+            }
+            streamWrite.close();
         }
-        catch (IOException e) {
-
+        catch (Exception e) {
+            System.out.println("UPS");
         }
-
-        System.out.println("Before unpacking: " + totalBytes + ". After: " + out.length());
-        return out.toString();
     }
 
-    private void collectData(LinkedList<Boolean> charSeparator, byte[] buffer, byte[] charTable, int bitsCount, StringBuilder out) {
+    private void collectData(LinkedList<Boolean> charSeparator, byte[] buffer, byte[] charTable, int bitsCount,
+                             LinkedList<Byte> writeBuffer) {
 
             for (byte b : buffer) {
                 for (int n = 0; n < 8; n++) {
@@ -72,18 +87,10 @@ public class Unpacker {
                             }
                             charSeparator.removeFirst();
                         }
-                        out.append((char) charTable[code]);
+                        writeBuffer.add(charTable[code]);
                     }
                 }
             }
-    }
-
-    public byte [] getCharTable() {
-        return charTable;
-    }
-
-    public byte [] getData() {
-        return data;
     }
 
     private int getCharTableSize(byte[] buffer) {
