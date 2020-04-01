@@ -1,0 +1,5 @@
+Where symbolic links are supported, but the underlying FileStore does not support symbolic links,
+then this may fail with an IOException. Additionally,
+some operating systems may require that the Java virtual machine
+be started with implementation specific privileges to create symbolic links,
+in which case this method may throw IOException.
