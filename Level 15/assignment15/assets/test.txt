@@ -1,5 +1,1 @@
-Where symbolic links are supported, but the underlying FileStore does not support symbolic links,
-then this may fail with an IOException. Additionally,
-some operating systems may require that the Java virtual machine
-be started with implementation specific privileges to create symbolic links,
-in which case this method may throw IOException.
+В цілому реалізація завдання правильна, всі умови завдання виконані. Є зауваження до код стайлу, та декількох моментів які можна було реалізувати простіше. Також є баг, через який при архівації і розархівації, послідовностей біт менше 8, може виникнути спотворення інформації. Проте його дуже легко виправити.

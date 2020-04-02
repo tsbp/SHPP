@@ -1,61 +1,56 @@
 package com.shpp.p2p.cs.bcimbal.assignment15;
 
+import org.w3c.dom.Node;
+
+import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
 public class FreqList {
 
-    private static final int IO_BUFFER_SIZE = 10;
-    int totalBytes = 0;
+    private static final int IO_BUFFER_SIZE = 3;
 
-//    int [] freqs = new int[256];
-
-    LinkedList <Integer> freqs = new LinkedList<>(Collections.nCopies(256, 0));
-
+    LinkedList<BFreq> freqList;
     /******************************************************************************************************************/
     FreqList(String fileName) {
-        HashMap<Character, Integer>freqs = getCharTable(fileName);
-//        NavigableMap<Character, Integer>freqs1 = new TreeMap<>(freqs);
-//
-//        ArrayList<Integer> mapVals = new ArrayList<>(freqs1.values());
-//        Collections.sort(mapVals);
-
-        System.out.println("1213");
+        freqList = readFreqsFromFile(fileName);
+        //System.out.println(freqs);
     }
 
-    /******************************************************************************************************************/
+   public LinkedList<BFreq> getFreqList() {
+        return freqList;
+   }
 
     /******************************************************************************************************************/
-    private HashMap<Character, Integer>  getCharTable(String fileName) {
+    private LinkedList<BFreq> readFreqsFromFile(String fileName) {
 
-        HashMap<Character, Integer> tmp = new HashMap<>();
-        try {
-            FileInputStream stream = new FileInputStream(fileName);
-            int bytesToRead = stream.available();
-            if (bytesToRead > IO_BUFFER_SIZE) bytesToRead = IO_BUFFER_SIZE;
-            totalBytes += bytesToRead;
-            while (bytesToRead > 0) {
-                byte[] buffer = new byte[bytesToRead];
-                stream.read(buffer);
-                for (byte bt : buffer) {
-                    char ch = (char) bt;
-                    if(tmp.containsKey(ch)) {
-                        int a = tmp.get(ch) + 1;
-                        tmp.put(ch, a);
-                    }
-                    else {
-                        tmp.put(ch, 1);
-                    }
+        ArrayList<Integer> tmp = new ArrayList<>(Collections.nCopies((int)Math.pow(2, Byte.SIZE), 0));
+
+        try (FileInputStream fStream = new FileInputStream(fileName);
+             BufferedInputStream stream = new BufferedInputStream(fStream, IO_BUFFER_SIZE)) {
+            byte[] buffer = new byte[IO_BUFFER_SIZE];
+            int count = 0;
+            while ((count = stream.read(buffer, 0, IO_BUFFER_SIZE)) > 0) {
+                for (int i = 0; i < count; i++) {
+                    int a = buffer[i] & 0xff;
+                    tmp.set(a, tmp.get(a) + 1);
                 }
-                bytesToRead = stream.available();
-                if (bytesToRead > IO_BUFFER_SIZE) bytesToRead = IO_BUFFER_SIZE;
-                totalBytes += bytesToRead;
             }
         } catch (IOException e) {
             System.out.println("UPS");
             e.printStackTrace();
         }
-        return tmp;
+
+        LinkedList<BFreq> freq= new LinkedList<>();
+        for(int i = 0; i < 256; i++) {
+            if(tmp.get(i) > 0) {
+                freq.add(new BFreq(tmp.get(i), (byte) i, /*null,*/ null, null));
+            }
+        }
+        Collections.sort(freq, Comparator.comparing(BFreq::getFreq));
+        return freq;
     }
 }
+
+
