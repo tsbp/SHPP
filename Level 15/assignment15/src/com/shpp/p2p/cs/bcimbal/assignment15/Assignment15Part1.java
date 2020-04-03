@@ -33,5 +33,27 @@ public class Assignment15Part1 {
         }
         return freqs.poll();
     }
+}
+class SymbolCode {
+    byte symbol;
+    byte code;
+    int bitsCount;
 
+    SymbolCode(byte symbol, byte code, int bitsCount) {
+        this.symbol = symbol;
+        this.code = code;
+        this.bitsCount = bitsCount;
+    }
+
+    public byte getCode() {
+        return code;
+    }
+
+    public byte getSymbol() {
+        return symbol;
+    }
+
+    public int getBitsCount() {
+        return bitsCount;
+    }
 }
