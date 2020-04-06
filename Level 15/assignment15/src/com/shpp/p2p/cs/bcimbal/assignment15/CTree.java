@@ -16,7 +16,7 @@ class CTree {
 
         this.codes = new SymbolCode[256];
         for(SymbolCode symbol : codesList) {
-            codes[symbol.getSymbol()] = symbol;
+            codes[symbol.getSymbol() & 0xff] = symbol;
         }
     }
 

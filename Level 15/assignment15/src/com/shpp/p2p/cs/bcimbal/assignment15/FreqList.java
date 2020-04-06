@@ -5,9 +5,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
-public class FreqList {
+public class FreqList extends CHelper{
 
-    private static final int IO_BUFFER_SIZE = 3;
+
 
     private LinkedList<CNode> freqList;
     private byte [] freqListAsByteArray;
@@ -63,10 +63,10 @@ public class FreqList {
         for(int i = 0; i < array.length / 5; i++) {
             CNode [] children = {null, null};
             byte byteValue = array[i * 5];
-            int freq = (array[i * 5 + 1] << 0) |
-                    (array[i * 5 + 2] << 8) |
-                    (array[i * 5 + 3] << 16) |
-                    (array[i * 5 + 4] << 24);
+            int freq = ((array[i * 5 + 1] & 0xff) << 0) |
+                    ((array[i * 5 + 2] & 0xff) << 8) |
+                    ((array[i * 5 + 3] & 0xff) << 16) |
+                    ((array[i * 5 + 4] & 0xff) << 24);
             tmp.add(new CNode(freq, byteValue, children));
         }
         return tmp;
@@ -89,7 +89,7 @@ public class FreqList {
              BufferedInputStream stream = new BufferedInputStream(fStream, IO_BUFFER_SIZE)) {
             byte[] buffer = new byte[IO_BUFFER_SIZE];
             int count = 0;
-            while ((count = stream.read(buffer, 0, IO_BUFFER_SIZE)) > 0) {
+            while ((count = stream.read(buffer/*, 0, IO_BUFFER_SIZE*/)) > 0) {
                 for (int i = 0; i < count; i++) {
                     int a = buffer[i] & 0xff;
                     tmp.set(a, tmp.get(a) + 1);
