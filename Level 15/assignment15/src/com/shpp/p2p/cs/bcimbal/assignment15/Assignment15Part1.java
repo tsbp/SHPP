@@ -1,59 +1,40 @@
 package com.shpp.p2p.cs.bcimbal.assignment15;
 
 
-import java.util.Collections;
-import java.util.Comparator;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 
-public class Assignment15Part1 {
+
+public class Assignment15Part1 extends Compressor{
+
 
 
     /******************************************************************************************************************/
     public static void main(String[] args) {
 
-        FreqList fl = new FreqList("assets/test.txt");
-        BFreq root = createTree(fl.getFreqList());
-        System.out.println("1213");
+        FreqList symbolFreqs = new FreqList("assets/test.txt");
+        CTree tree = new CTree(symbolFreqs.getFreqList());
+        SymbolCode [] codes = tree.getCodes();
 
+        String a = "abcccdddddd";
+        Compressor compressor = new Compressor();
+        LinkedList<Byte> compressed = compressor.compress(a.getBytes(), codes);
+
+        //----------------------------------------------------------------
+        byte [] fr = symbolFreqs.getFreqListAsByteArray();
+
+        FreqList restored = new FreqList(fr);
+        CTree treeRestored = new CTree(restored.getFreqList());
+        SymbolCode [] codesRestored = treeRestored.getCodes();
+        ArrayList<Byte> decompressed = compressor.decompress(a.length(), compressed, treeRestored);
+        System.out.println("1234");
     }
 
-    /*******************************************************************************************************************
-     *
-     * @param freqs
-     * @return
-     */
-    private static BFreq createTree (LinkedList<BFreq> freqs) {
-        while (freqs.size() > 1) {
-            BFreq leafr = freqs.poll();
-            BFreq leafl = freqs.poll();
-            BFreq parent = new BFreq(leafl.getFreq() + leafr.getFreq(),
-                    (byte) 0, leafl, leafr);
-            freqs.addFirst(parent);
-            Collections.sort(freqs, Comparator.comparing(BFreq::getFreq));
-        }
-        return freqs.poll();
-    }
+
+
+
 }
-class SymbolCode {
-    byte symbol;
-    byte code;
-    int bitsCount;
 
-    SymbolCode(byte symbol, byte code, int bitsCount) {
-        this.symbol = symbol;
-        this.code = code;
-        this.bitsCount = bitsCount;
-    }
 
-    public byte getCode() {
-        return code;
-    }
-
-    public byte getSymbol() {
-        return symbol;
-    }
-
-    public int getBitsCount() {
-        return bitsCount;
-    }
-}
