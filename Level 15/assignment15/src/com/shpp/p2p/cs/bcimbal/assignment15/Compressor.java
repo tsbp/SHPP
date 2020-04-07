@@ -112,7 +112,7 @@ public class Compressor extends CHelper {
      * @param streamIn BufferedInputStream input stream
      * @param streamOut BufferedOutputStream output stream
      * @param codes array of symbol codes
-     * @throws IOException
+     * @throws IOException a
      */
     public void compress(BufferedInputStream streamIn,
                          BufferedOutputStream streamOut,

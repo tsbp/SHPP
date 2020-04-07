@@ -26,9 +26,7 @@ public class CNode {
         this.frequency = freq;
         this.byteValue = byteValue;
 
-        for (int i = 0; i < leafs.length; i++) {
-            this.leafs[i] = leafs[i];
-        }
+        System.arraycopy(leafs, 0, this.leafs, 0, leafs.length);
     }
 
     /*******************************************************************************************************************

@@ -69,7 +69,8 @@ public class FreqList extends CHelper {
         for (int i = 0; i < array.length / 5; i++) {
             CNode[] children = {null, null};
             byte byteValue = array[i * 5];
-            int freq = ((array[i * 5 + 1] & 0xff) << 0) |
+            int freq =
+                    ((array[i * 5 + 1] & 0xff) << 0) |
                     ((array[i * 5 + 2] & 0xff) << 8) |
                     ((array[i * 5 + 3] & 0xff) << 16) |
                     ((array[i * 5 + 4] & 0xff) << 24);
@@ -99,7 +100,7 @@ public class FreqList extends CHelper {
         try (FileInputStream fStream = new FileInputStream(fileName);
              BufferedInputStream stream = new BufferedInputStream(fStream, IO_BUFFER_SIZE)) {
             byte[] buffer = new byte[IO_BUFFER_SIZE];
-            int count = 0;
+            int count;
             while ((count = stream.read(buffer/*, 0, IO_BUFFER_SIZE*/)) > 0) {
                 for (int i = 0; i < count; i++) {
                     int a = buffer[i] & 0xff;
@@ -119,7 +120,7 @@ public class FreqList extends CHelper {
                 freq.add(new CNode(tmp.get(i), (byte) i, /*null,*/ /*null,*/ nodes));
             }
         }
-        Collections.sort(freq, Comparator.comparing(CNode::getFreq));
+        freq.sort(Comparator.comparing(CNode::getFreq));
         return freq;
     }
 }
