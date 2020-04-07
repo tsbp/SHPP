@@ -4,10 +4,18 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.LinkedList;
-
+/*******************************************************************************************************************
+ * Constructor makes unzipping of given input file to output file
+ * with showing result of process
+ */
 public class Unpacker {
-
-
+    /*******************************************************************************************************************
+     * Constructor makes unzipping of given input file to output file
+     * with showing result of process
+     *
+     * @param fileIn input file name
+     * @param fileOut output file name
+     */
     Unpacker(String fileIn, String fileOut) {
         try {
             Helper.getFileInfo("Input file size in bytes:", fileIn);
@@ -32,6 +40,13 @@ public class Unpacker {
         }
     }
 
+    /*******************************************************************************************************************
+     * Unpacking file
+     *
+     * @param file output file name to sore dat
+     * @param streamRead current stream of reading
+     * @param charTable char table array to decode chars
+     */
     private  void unpack (String file, FileInputStream streamRead, byte[] charTable){
         int bitsCount = Helper.getBitsCount(charTable.length);
         //----------------------------------------------------------------------------------------
@@ -68,6 +83,15 @@ public class Unpacker {
         }
     }
 
+     /*******************************************************************************************************************
+     * Collect data to write buffer
+     *
+     * @param charSeparator list of bits to be decoded to char
+     * @param buffer input data buffer
+     * @param charTable char table array
+     * @param bitsCount bits count to codding chars
+     * @param writeBuffer buffer of data to be written
+     */
     private void collectData(LinkedList<Boolean> charSeparator, byte[] buffer, byte[] charTable, int bitsCount,
                              LinkedList<Byte> writeBuffer) {
 
@@ -93,9 +117,14 @@ public class Unpacker {
             }
     }
 
+    /*******************************************************************************************************************
+     * Get char table size from input buffer
+     * @param buffer input byte buffer
+     * @return int char table size
+     */
     private int getCharTableSize(byte[] buffer) {
         int out = 0;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < Helper.HEADER_TABLE_SIZE_IN_BYTES; i++) {
             out = out | (buffer[i] << (i * 8));
         }
         return out;

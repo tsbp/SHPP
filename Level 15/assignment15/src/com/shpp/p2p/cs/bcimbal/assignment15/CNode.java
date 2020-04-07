@@ -1,47 +1,104 @@
 package com.shpp.p2p.cs.bcimbal.assignment15;
 
-public class CNode {
-    private int frequency;
-    private byte byteValue;
-    private int bitCount;
-    private int code;
-    private CNode[] leafs = new CNode[2];
+/* Class represents structure to hold huffman tree node data */
 
+public class CNode {
+    /* frequency at which the symbol occurs */
+    private int frequency;
+    /* byte value of symbol */
+    private byte byteValue;
+    /* symbol code */
+    private int code;
+    /* number of bits symbol code occupies */
+    private int bitCount;
+    /* node leafs (2 pcs.) */
+    private CNode[] leafs = new CNode[2];
+    /* marker to perform  search algorithm*/
     private boolean visited = false;
 
-    CNode(int freq, byte byteValue, CNode[] nodes) {
+    /*******************************************************************************************************************
+     * Constructor
+     * @param freq frequency at which the symbol occurs
+     * @param byteValue byte value of symbol
+     * @param leafs node leafs
+     */
+    CNode(int freq, byte byteValue, CNode[] leafs) {
         this.frequency = freq;
         this.byteValue = byteValue;
 
-        for(int i = 0; i < nodes.length; i++) {
-                this.leafs[i] = nodes[i];
-            }
-
+        for (int i = 0; i < leafs.length; i++) {
+            this.leafs[i] = leafs[i];
+        }
     }
+
+    /*******************************************************************************************************************
+     * External request for code bits count
+     * @return code bits number
+     */
     public int getBitCount() {
         return bitCount;
     }
+
+    /*******************************************************************************************************************
+     * External set code bits number
+     * @param bitCount code bits number
+     */
     public void setBitCount(int bitCount) {
         this.bitCount = bitCount;
     }
+
+    /*******************************************************************************************************************
+     * External request for symbol code
+     * @return symbol code
+     */
     public int getCode() {
         return code;
     }
+
+    /*******************************************************************************************************************
+     * External set  symbol code
+     * @param code  symbol code
+     */
     public void setCode(int code) {
         this.code = code;
     }
+
+    /*******************************************************************************************************************
+     * External request for symbol frequency
+     * @return symbol frequency
+     */
     public int getFreq() {
         return frequency;
     }
+
+    /*******************************************************************************************************************
+     *  External request for symbol byte value
+     * @return symbol byte value
+     */
     public byte getByteValue() {
         return byteValue;
     }
+
+    /*******************************************************************************************************************
+     *  External request for node leafs
+     * @return node leafs
+     */
     public CNode[] getLeafs() {
         return this.leafs;
     }
+
+    /*******************************************************************************************************************
+     * External set search algorithm marker
+     * @param visited boolean, true if operations have been executed
+     */
     public void setVisited(boolean visited) {
         this.visited = visited;
     }
+
+    /*******************************************************************************************************************
+     * External request search algorithm marker state
+     * @return boolean, true if operations have been executed
+     */
     public boolean isVisited() {
         return visited;
     }

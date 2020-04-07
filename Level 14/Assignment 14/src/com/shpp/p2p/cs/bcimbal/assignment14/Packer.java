@@ -6,12 +6,20 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+/*******************************************************************************************************************
+ * Class makes archiving of given input file to output file
+ * with showing result of process
+ */
 public class Packer {
 
     private int totalBytes = 0;
 
-    /**
-     * @param
+    /*******************************************************************************************************************
+     * Constructor makes archiving of given input file to output file
+     * with showing result of process
+     *
+     * @param fileIn input file name
+     * @param fileOut output file name
      */
     Packer(String fileIn, String fileOut) {
 
@@ -28,6 +36,13 @@ public class Packer {
                 "ms.\r\nOutput file size in bytes:", fileOut));
     }
 
+    /*******************************************************************************************************************
+     * Packaging data
+     *
+     * @param fileOut output file name
+     * @param fileIn input file name
+     * @param charTableAsMap char table map
+     */
     private void packToFile(String fileOut, String fileIn, HashMap<Character, Integer> charTableAsMap) {
         int bitsCount = Helper.getBitsCount(convertToArray(charTableAsMap).length);
         try {
@@ -49,7 +64,10 @@ public class Packer {
                 streamRead.read(readBuffer);
                 collectData(byteSeparator, readBuffer, charTableAsMap, bitsCount, writeBuffer);
                 if (writeBuffer.size() >= Helper.IO_BUFFER_SIZE) {
+                    totalBytes -= bytesToRead;
+                    System.out.print("Bytes left for processing: " + totalBytes + "\r");
                     Helper.writeBufferToFile(streamWrite, writeBuffer, Helper.IO_BUFFER_SIZE);
+
                 }
                 bytesToRead = streamRead.available();
                 if (bytesToRead > Helper.IO_BUFFER_SIZE) bytesToRead = Helper.IO_BUFFER_SIZE;
@@ -70,6 +88,15 @@ public class Packer {
         }
     }
 
+    /*******************************************************************************************************************
+     * Collect data to write buffer
+     *
+     * @param byteSeparator list of bits to be decoded
+     * @param buffer input data buffer
+     * @param charTable char table map
+     * @param bitsCount bits count to codding chars
+     * @param writeBuffer data buffer
+     */
     private void collectData(LinkedList<Boolean> byteSeparator, byte[] buffer,
                              HashMap<Character, Integer> charTable, int bitsCount,
                              LinkedList<Byte> writeBuffer) {
@@ -95,8 +122,13 @@ public class Packer {
             }
         }
     }
-    /*******************************************************************************************************************
 
+    /*******************************************************************************************************************
+     * Prepare file header
+     *
+     * @param tableSize  char table size
+     * @param packedSize data size
+     * @return packed file header byte array
      */
     private static byte[] getFileInfo(int tableSize, int packedSize) {
         byte[] out = new byte[12];
@@ -111,11 +143,22 @@ public class Packer {
         return out;
     }
 
-
+    /*******************************************************************************************************************
+     * Get certain byte from long value
+     *
+     * @param number byte number
+     * @param value long value
+     * @return byte value
+     */
     private static byte getByte(int number, long value) {
         return (byte) ((value >> 8 * number) & 0xff);
     }
 
+    /*******************************************************************************************************************
+     * Read file partially to define char table
+     * @param fileName file name
+     * @return char table map
+     */
     private HashMap<Character, Integer> getCharTable(String fileName) {
         int totalUnicumChars = 0;
         HashMap<Character, Integer> tmp = new HashMap<>();
@@ -144,7 +187,12 @@ public class Packer {
         return tmp;
     }
 
-    /******************************************************************************************************************/
+    /*******************************************************************************************************************
+     * Convert char table map to char table array
+     *
+     * @param charTable char table map
+     * @return byte char table array
+     */
     private static byte[] convertToArray(HashMap<Character, Integer> charTable) {
         byte[] out = new byte[charTable.size()];
         for (Character ch : charTable.keySet()) {
