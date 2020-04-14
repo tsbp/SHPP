@@ -12,8 +12,19 @@ public class LinkList<T> extends AbstractSequentialList<T> {
 
     }
 
+    public LLNode<T> getFirst() {
+        return first;
+    }
+
+    public T getNodeData(LLNode<T> node){
+        if(node != null) {
+            return node.getData();
+        }
+        return null;
+    }
+
     @Override
-    public T remove(int index) {
+    public T remove(int index) throws NullPointerException {
         if(isIndexInOfBounds(index)) {
             LLNode<T> removed = getNode(index);
             LLNode<T> prev = removed.previous;
@@ -112,6 +123,26 @@ public class LinkList<T> extends AbstractSequentialList<T> {
         size++;
     }
 
+    public void removeFirst(){
+        if(size > 1) {
+            first = first.next;
+            first.previous = null;
+            size--;
+            if(size == 1) {
+                last = first;
+            }
+        }
+        else {
+            size = 0;
+            first = last = null;
+        }
+    }
+    public T poll(){
+        LLNode<T> toReturn = first;
+        removeFirst();
+        return  toReturn.data;
+    }
+
     @Override
     public ListIterator<T> listIterator(int index) {
         Object[] tmp = new Object[size];
@@ -127,7 +158,7 @@ public class LinkList<T> extends AbstractSequentialList<T> {
         return this.size;
     }
 
-    private static class LLNode<T> {
+    private class LLNode<T> {
         T data;
         LLNode<T> next;
         LLNode<T> previous;
