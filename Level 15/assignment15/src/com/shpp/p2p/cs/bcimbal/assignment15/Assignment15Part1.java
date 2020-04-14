@@ -2,6 +2,8 @@ package com.shpp.p2p.cs.bcimbal.assignment15;
 
 /* Class makes file compression/decompression by Huffman codding */
 
+import java.util.ArrayList;
+
 public class Assignment15Part1 extends CHelper {
 
     static String fileIn = "";
@@ -13,6 +15,7 @@ public class Assignment15Part1 extends CHelper {
      */
     public static void main(String[] args) {
 
+        ArrayList<>
         if (args.length > 0) {
             switch (args[0]) {
 
