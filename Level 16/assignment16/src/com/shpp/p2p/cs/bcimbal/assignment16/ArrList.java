@@ -21,7 +21,7 @@ public class ArrList <T> extends AbstractList<T>{
         objects = new Object[INITIAL_CAPACITY];
     }
 
-    /**
+    /*******************************************************************************************************************
      * Add item to collection
      * @param e item data
      * @return true
@@ -34,7 +34,7 @@ public class ArrList <T> extends AbstractList<T>{
         return true;
     }
 
-    /**
+    /*******************************************************************************************************************
      * increase data storage array
      */
     private void resize() {
@@ -45,7 +45,7 @@ public class ArrList <T> extends AbstractList<T>{
         }
     }
 
-    /**
+    /*******************************************************************************************************************
      * collection size
      * @return int number of items in collection
      */
@@ -54,7 +54,7 @@ public class ArrList <T> extends AbstractList<T>{
         return this.size;
     }
 
-    /**
+    /*******************************************************************************************************************
      * get item from collection
      * @param i int item index
      * @return T item
@@ -64,7 +64,7 @@ public class ArrList <T> extends AbstractList<T>{
         return (T)objects[i];
     }
 
-    /**
+    /*******************************************************************************************************************
      * set data to item at index
      * @param index item index
      * @param element item data
@@ -79,7 +79,7 @@ public class ArrList <T> extends AbstractList<T>{
         else return null;
     }
 
-    /**
+    /*******************************************************************************************************************
      * current collection iterator
      * @return collection iterator
      */
@@ -89,7 +89,7 @@ public class ArrList <T> extends AbstractList<T>{
         return list.iterator();
     }
 
-    /**
+    /*******************************************************************************************************************
      * remove item at given index from collection
      * @param index item index
      * @return T item data
@@ -116,6 +116,11 @@ public class ArrList <T> extends AbstractList<T>{
         else return null;
     }
 
+    /*******************************************************************************************************************
+     * check Index In Of Bounds of array
+     * @param index input index
+     * @return true if Index In Of Bounds
+     */
     private boolean isIndexInOfBounds(int index) {
         return index >= 0 && index < size;
     }

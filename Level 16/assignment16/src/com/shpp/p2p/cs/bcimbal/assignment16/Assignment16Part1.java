@@ -18,9 +18,10 @@ public class Assignment16Part1 {
         tmp = qq.peek();
         qq.poll();
         tmp = qq.peek();
+        qq.poll();
+        qq.remove();
 
-
-
+System.out.println(tmp );
 
     }
 }
