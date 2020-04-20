@@ -9,18 +9,24 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+/* The class to perform tests of LinkList class methods*/
 
 class LinkListTest {
 
+    /* Tested collection */
     LinkList<String> expected;
+    /* Reference collection */
     LinkedList<String> actual;
 
+    private static int COLLECTION_ITEMS_COUNT = 3000;
+
+    /* Fill both collections before executing each test*/
     @BeforeEach
     void setup() {
         expected =  new LinkList<>();
         actual = new LinkedList<>();
 
-        for(int i = 0; i < 20; i++) {
+        for(int i = 0; i < 3000; i++) {
             String str = "test_" + i;
             expected.add(str);
             actual.add(str);
@@ -93,12 +99,15 @@ class LinkListTest {
 
     @Test
     void remove() {
+        /* remove item at tail */
         expected.remove(expected.size() - 1);
         actual.remove(actual.size() - 1);
 
+        /* remove item at head */
         expected.remove(0);
         actual.remove(0);
 
+        /* remove inner item */
         expected.remove(3);
         actual.remove(3);
 

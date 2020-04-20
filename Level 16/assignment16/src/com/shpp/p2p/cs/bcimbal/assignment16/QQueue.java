@@ -1,7 +1,7 @@
 package com.shpp.p2p.cs.bcimbal.assignment16;
 
+import java.util.NoSuchElementException;
 import java.util.Queue;
-
 /***********************************************************************************************************************
  * The class implements the behavior of a queue, which acts as a first-in-first-out list.
  *
@@ -90,12 +90,12 @@ public class QQueue<E> extends LinkList<E> implements Queue<E> {
     }
 }
 
-/***********************************************************************************************************************
- * No Such Element Exception class
- * for exception to be thrown by QQueue class methods
- */
- class NoSuchElementException extends RuntimeException {
-    public NoSuchElementException(String errorMsg) {
-        super(errorMsg);
-    }
-}
+///***********************************************************************************************************************
+// * No Such Element Exception class
+// * for exception to be thrown by QQueue class methods
+// */
+// class NoSuchElementException extends RuntimeException {
+//    public NoSuchElementException(String errorMsg) {
+//        super(errorMsg);
+//    }
+//}

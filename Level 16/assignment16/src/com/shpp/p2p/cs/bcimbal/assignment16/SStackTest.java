@@ -6,18 +6,23 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Stack;
 
-
+/* The class to perform tests of SStack class methods*/
 class SStackTest {
 
+    /* Tested collection */
     SStack<String> expected;
+    /* Reference collection */
     Stack<String> actual;
 
+    private static int COLLECTION_ITEMS_COUNT = 3000;
+
+    /* Fill both collections before executing each test*/
     @BeforeEach
     void setup() {
         expected =  new SStack<>();
         actual = new Stack<>();
 
-        for(int i = 0; i < 20; i++) {
+        for(int i = 0; i < COLLECTION_ITEMS_COUNT; i++) {
             String str = "test_" + i;
             actual.push(str);
             expected.push(str);
@@ -26,9 +31,9 @@ class SStackTest {
 
     @Test
     void pop_empty() {
-        for(int i = 0; i < 20; i++) {
+        for(int i = 0; i < COLLECTION_ITEMS_COUNT; i++) {
             actual.pop();
-            expected.рор();
+            expected.pop();
         }
         Assert.assertEquals (actual.empty(), expected.empty());
         Assert.assertEquals (expected, actual);
