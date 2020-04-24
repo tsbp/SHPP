@@ -2,6 +2,7 @@ package com.shpp.p2p.cs.bcimbal.assignment17;
 
 import org.junit.Assert;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -31,6 +32,7 @@ class HHashMapTest {
 
         String[] tmp = new String[expected.size()];
         Set<Integer>s = expected.keySet();
+        Collection<String> c = expected.values();
         s.toString();
         for(int i : expected.keySet()) {
             tmp[i-1] = expected.get(i);
