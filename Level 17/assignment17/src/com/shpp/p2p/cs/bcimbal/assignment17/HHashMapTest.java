@@ -1,43 +1,60 @@
 package com.shpp.p2p.cs.bcimbal.assignment17;
 
 import org.junit.Assert;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class HHashMapTest {
 
+    @Test
+    void keySet() {
+    }
 
-    @org.junit.jupiter.api.Test
+    @Test
+    void values() {
+    }
+
+    @Test
     void entrySet() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void size() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void put() {
-        HashMap<Integer, String> actual = new HashMap<>();
-        HHashMap<Integer, String> expected = new HHashMap<>();
-        expected.put(1, "first"); size();
-        expected.put(2, "second");
-        expected.put(3, "third");
-        actual.put(1, "first"); size();
-        actual.put(2, "second");
-        actual.put(3, "third");
+        HashMap<String, String> actual = new HashMap<>();
+        HHashMap<String, String> expected = new HHashMap<>();
+        for(int i = 0; i < 15; i++){
+            String fStr = "test_" + i;
+            expected.put("key_" + i, fStr);
+            actual.put("key_" + i, fStr);
+        }
 
         String[] tmp = new String[expected.size()];
-        Set<Integer>s = expected.keySet();
+        Set<String> s = expected.keySet();
         Collection<String> c = expected.values();
         s.toString();
-        for(int i : expected.keySet()) {
-            tmp[i-1] = expected.get(i);
+        for(int i = 0; i < expected.keySet().size(); i++) {
+            String val = expected.get("key_" + i);
+            tmp[i] = val;
         }
         System.out.println("breakpoint");
         Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void containsKey() {
+    }
+
+    @Test
+    void get() {
     }
 }
