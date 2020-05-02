@@ -1,5 +1,7 @@
 package com.shpp.p2p.cs.bcimbal.assignment15;
 
+import com.shpp.p2p.cs.bcimbal.assignment16.LinkList;
+
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -9,7 +11,7 @@ import java.util.*;
 
 public class FreqList extends CHelper {
     /* List of symbols frequencies */
-    private LinkedList<CNode> freqList;
+    private LinkList<CNode> freqList;
     /* byte array representation of symbols frequencies list*/
     private byte[] freqListAsByteArray;
 
@@ -45,7 +47,7 @@ public class FreqList extends CHelper {
      * @param freqList input list
      * @return ymbols frequencies byte array
      */
-    private byte[] convertToByteArray(LinkedList<CNode> freqList) {
+    private byte[] convertToByteArray(LinkList<CNode> freqList) {
         byte[] tmp = new byte[freqList.size() * 5];
         for (int i = 0; i < freqList.size(); i++) {
             CNode node = freqList.get(i);
@@ -64,8 +66,8 @@ public class FreqList extends CHelper {
      * @param array input byte array
      * @return symbols frequencies list
      */
-    private LinkedList<CNode> createList(byte[] array) {
-        LinkedList<CNode> tmp = new LinkedList<>();
+    private LinkList<CNode> createList(byte[] array) {
+        LinkList<CNode> tmp = new LinkList<>();
         for (int i = 0; i < array.length / 5; i++) {
             CNode[] children = {null, null};
             byte byteValue = array[i * 5];
@@ -83,7 +85,7 @@ public class FreqList extends CHelper {
      * External request for symbols frequencies list
      * @return symbols frequencies list
      */
-    public LinkedList<CNode> getFreqList() {
+    public LinkList<CNode> getFreqList() {
         return freqList;
     }
 
@@ -93,7 +95,7 @@ public class FreqList extends CHelper {
      * @param fileName input file
      * @return symbols frequencies list
      */
-    private LinkedList<CNode> readFreqsFromFile(String fileName) {
+    private LinkList<CNode> readFreqsFromFile(String fileName) {
 
         ArrayList<Integer> tmp = new ArrayList<>(Collections.nCopies((int) Math.pow(2, Byte.SIZE), 0));
 
@@ -113,7 +115,7 @@ public class FreqList extends CHelper {
         }
 
         /* get used symbols to list and sort */
-        LinkedList<CNode> freq = new LinkedList<>();
+        LinkList<CNode> freq = new LinkList<>();
         for (int i = 0; i < 256; i++) {
             if (tmp.get(i) > 0) {
                 CNode[] nodes = {null, null};
