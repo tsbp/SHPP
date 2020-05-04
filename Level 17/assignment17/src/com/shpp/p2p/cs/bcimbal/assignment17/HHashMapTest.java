@@ -1,71 +1,82 @@
 package com.shpp.p2p.cs.bcimbal.assignment17;
 
 import org.junit.Assert;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class HHashMapTest {
+
+    private static  final int ITERATIONS_COUNT = 13;
+    HashMap<String, String> actual;
+    HHashMap<String, String> expected;
+
+    @BeforeEach
+    void setup() {
+        actual = new HashMap<>();
+        expected = new HHashMap<>();
+        for(int i = 0; i < ITERATIONS_COUNT; i++){
+            String key = "key_" + i;
+            String value = "value_" + i;
+            actual.put(key, value);
+            expected.put(key, value);
+        }
+    }
 
     @Test
     void keySet() {
+        Set sActual = actual.keySet();
+        Set sExpected = expected.keySet();
+
+        Assert.assertTrue(sActual.containsAll(sExpected));
     }
 
     @Test
     void values() {
+        Collection cActual = actual.values();
+        Collection cExpected = expected.values();
+        Assert.assertTrue(cActual.containsAll(cExpected));
     }
 
     @Test
     void entrySet() {
+        Set sActual = actual.entrySet();
+        Set sExpected = expected.entrySet();
+
+        Assert.assertTrue(sActual.containsAll(sExpected));
     }
 
     @Test
     void size() {
+        Assert.assertTrue(expected.size() == actual.size());
     }
 
     @Test
     void put() {
-        HashMap<String, String> actual = new HashMap<>();
-        HHashMap<String, String> expected = new HHashMap<>();
-        for(int i = 0; i < 10000; i++){
-            String fStr = "test_" + i;
-            expected.put("key_" + i, fStr);
-            actual.put("key_" + i, fStr);
-        }
+        entrySet();
+    }
 
-        String[] tmp = new String[expected.size()];
-        Set es = expected.entrySet();
-        Set<String> s = expected.keySet();
-        Collection<String> c = expected.values();
-        int index = 0;
-        for(String k : expected.keySet()) {
-            if(k.equals("key_11999")){
-                System.out.println("breakpoint");
-            }
-            if(!expected.containsKey(k)){
-                System.out.println("breakpoint");
-            }
-            assertEquals(expected.containsKey(k), true);
+    @Test
+    void remove() {
+        Object [] keyArray = actual.keySet().toArray();
+        for(int i = 0; i < ITERATIONS_COUNT; i += 2) {
+            expected.remove(keyArray[i]);
+            Assert.assertFalse(expected.containsKey(keyArray[i]));
         }
-
-//        s.toString();
-//        for(int i = 0; i < expected.keySet().size(); i++) {
-//            if(expected.containsKey("kay_" + i)) {
-//                String val = expected.get("key_" + i);
-//                tmp[i] = val;
-//            }
-//        }
-        System.out.println("breakpoint");
-        //Assert.assertEquals(expected, actual);
     }
 
     @Test
     void containsKey() {
+        for (String key : actual.keySet()) {
+            Assert.assertTrue(expected.containsKey(key));
+        }
     }
 
     @Test
     void get() {
+        for (String key : actual.keySet()) {
+            Assert.assertEquals(expected.get(key), actual.get(key));
+        }
     }
 }

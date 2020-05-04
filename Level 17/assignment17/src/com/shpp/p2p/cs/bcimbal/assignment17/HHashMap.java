@@ -180,7 +180,6 @@ public class HHashMap<K, V> extends AbstractMap<K, V> {
             tmp.next = e;
 
         } else {
-
             hTable[index] = e;
         }
     }
@@ -194,16 +193,11 @@ public class HHashMap<K, V> extends AbstractMap<K, V> {
         EEntry<K, V>[] newHashTable = new EEntry[hashTable.length * 2];
         for (Entry<K, V> e : entrySet()) {
             if (e != null) {
-                EEntry<K, V> tmp = (EEntry<K, V>) e;
-                while (tmp != null) {
+                ((EEntry<K, V>) e).next = null; //clear links
                     addToEntryToTable((EEntry<K, V>) e, newHashTable);
-                    tmp = tmp.next;
                 }
-            }
         }
         return newHashTable;
-
-
     }
 
     /*******************************************************************************************************************
@@ -213,7 +207,8 @@ public class HHashMap<K, V> extends AbstractMap<K, V> {
      * @return hashcode integer value
      */
     private int getHash(K key, int size) {
-        return Math.abs(key.hashCode() % size);/*(key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16)*/
+        int hash = key.hashCode();
+        return Math.abs((hash / 3) % size);
     }
 
     /*******************************************************************************************************************
@@ -223,8 +218,6 @@ public class HHashMap<K, V> extends AbstractMap<K, V> {
      */
     @Override
     public boolean containsKey(Object key) {
-
-
         int index = getHash((K) key, hashTable.length);
         EEntry currentEntry = hashTable[index];
         if (currentEntry == null) {
