@@ -10,7 +10,6 @@ public class LinkList<T> extends AbstractSequentialList<T> {
     int size = 0;
 
 
-
     /*******************************************************************************************************************
      * Method to get first node of list
      * @return first node of list
@@ -19,7 +18,6 @@ public class LinkList<T> extends AbstractSequentialList<T> {
 //    public LLNode<T> getFirst() {
 //        return first;
 //    }
-
     public T getFirst() {
         return first.data;
     }
@@ -31,8 +29,8 @@ public class LinkList<T> extends AbstractSequentialList<T> {
      * @param node input node
      * @return node object
      */
-    public T getNodeData(LLNode<T> node){
-        if(node != null) {
+    public T getNodeData(LLNode<T> node) {
+        if (node != null) {
             return node.data;
         }
         return null;
@@ -46,21 +44,19 @@ public class LinkList<T> extends AbstractSequentialList<T> {
      */
     @Override
     public T remove(int index) {
-        if(isIndexInOfBounds(index)) {
+        if (isIndexInOfBounds(index)) {
             LLNode<T> removed = getNode(index);
             assert removed != null;
             LLNode<T> prev = removed.previous;
             LLNode<T> next = removed.next;
 
-            if(next == null) { // last node
+            if (next == null) { // last node
                 prev.next = null;
                 last = prev;
-            }
-            else if(prev == null) { //first node
+            } else if (prev == null) { //first node
                 next.previous = null;
                 first = next;
-            }
-            else { // inner node
+            } else { // inner node
                 prev.next = next;
                 next.previous = prev;
             }
@@ -92,11 +88,11 @@ public class LinkList<T> extends AbstractSequentialList<T> {
     /*******************************************************************************************************************
      * Method too get object at index
      * @param index list index
-     * @return  object at index, if node present. Otherwise - null;
+     * @return object at index, if node present. Otherwise - null;
      */
     @Override
     public T get(int index) {
-        if(isIndexInOfBounds(index)) {
+        if (isIndexInOfBounds(index)) {
             LLNode<T> tmp = first;
             for (int i = 0; i < index; i++) {
                 tmp = tmp.next;
@@ -109,10 +105,10 @@ public class LinkList<T> extends AbstractSequentialList<T> {
     /*******************************************************************************************************************
      * Method too get node at index
      * @param index list index
-     * @return  node at index, if node present. Otherwise - null;
+     * @return node at index, if node present. Otherwise - null;
      */
-    private LLNode <T> getNode (int index) {
-        if(isIndexInOfBounds(index)) {
+    private LLNode<T> getNode(int index) {
+        if (isIndexInOfBounds(index)) {
             LLNode<T> tmp = first;
             for (int i = 0; i < index; i++) {
                 tmp = tmp.next;
@@ -131,7 +127,7 @@ public class LinkList<T> extends AbstractSequentialList<T> {
      */
     @Override
     public T set(int index, T element) {
-        if(isIndexInOfBounds(index)) {
+        if (isIndexInOfBounds(index)) {
             getNode(index).data = element;
             return element;
         }
@@ -165,8 +161,8 @@ public class LinkList<T> extends AbstractSequentialList<T> {
      */
     @Override
     public void add(int index, T element) {
-        if(isIndexInOfBounds(index)) {
-            LLNode <T> shifted = getNode(index);
+        if (isIndexInOfBounds(index)) {
+            LLNode<T> shifted = getNode(index);
             assert shifted != null;
             shifted.previous.next = new LLNode<>(element, shifted.previous, shifted);
             size++;
@@ -186,9 +182,9 @@ public class LinkList<T> extends AbstractSequentialList<T> {
      */
     //todo changed
     public void addFirst(T data) {
-        LLNode<T>tmpFirst = first;
+        LLNode<T> tmpFirst = first;
 
- //       first.previous = first;
+        //       first.previous = first;
         first = new LLNode<T>(data, null, tmpFirst);
 //        first.next.previous
         if (first.next != null)
@@ -199,16 +195,15 @@ public class LinkList<T> extends AbstractSequentialList<T> {
     /*******************************************************************************************************************
      * Method to remove first element of list
      */
-    public void removeFirst(){
-        if(size > 1) {
+    public void removeFirst() {
+        if (size > 1) {
             first = first.next;
             first.previous = null;
             size--;
-            if(size == 1) {
+            if (size == 1) {
                 last = first;
             }
-        }
-        else {
+        } else {
             size = 0;
             first = last = null;
         }
@@ -216,12 +211,12 @@ public class LinkList<T> extends AbstractSequentialList<T> {
 
     /*******************************************************************************************************************
      * Method to get first element of list with its removing
-     * @return  first element of list
+     * @return first element of list
      */
-    public T poll(){
+    public T poll() {
         LLNode<T> toReturn = first;
         removeFirst();
-        return  toReturn.data;
+        return toReturn.data;
     }
 
     /*******************************************************************************************************************
@@ -232,30 +227,32 @@ public class LinkList<T> extends AbstractSequentialList<T> {
     @Override
     public ListIterator<T> listIterator(int index) {
         Object[] tmp = new Object[size];
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             tmp[i] = get(i);
         }
         List list = Arrays.asList(tmp);
         return list.listIterator();
     }
 
-//todo added
-//    @Override
-//    public void sort(Comparator<? super T> c) {
-//
-//        Object[] a = this.toArray();
-//        Arrays.sort(a, (Comparator) c);
-//
-//        {
-//            System.out.println();
-//        }
-//    }
+    //todo added
+    @Override
+    public void sort(Comparator<? super T> c) {
+        Object[] tmp = toArray();
+        Arrays.sort(tmp, (Comparator) c);
+        //refactor links
+        clear();
+        for (int i = 0; i < tmp.length; i++) {
+            add((T)tmp[i]);
+        }
+//        System.out.println();
+    }
 
     @Override
     public ListIterator<T> listIterator() {
         //return super.listIterator();
         return new ListIterator<T>() {
             LLNode current = first;
+
             @Override
             public boolean hasNext() {
                 return current.next == null;
@@ -263,7 +260,7 @@ public class LinkList<T> extends AbstractSequentialList<T> {
 
             @Override
             public T next() {
-                return (T)current.next;
+                return (T) current.next;
             }
 
             @Override
@@ -273,7 +270,7 @@ public class LinkList<T> extends AbstractSequentialList<T> {
 
             @Override
             public T previous() {
-                return (T)current.previous;
+                return (T) current.previous;
             }
 
             @Override
@@ -314,10 +311,10 @@ public class LinkList<T> extends AbstractSequentialList<T> {
 //            current = current.next;
 //        }
         Object[] ret = new Object[size];
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             ret[i] = get(i);
         }
-        return  ret;
+        return ret;
     }
 
     //todo added
@@ -337,7 +334,7 @@ public class LinkList<T> extends AbstractSequentialList<T> {
 
 
     /* Class for list node */
-   static class LLNode<T> {
+    static class LLNode<T> {
         /* node object */
         T data;
         /* next node pointer */

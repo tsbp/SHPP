@@ -39,9 +39,17 @@ public class PQueue<E> extends AbstractQueue<E> {
     }
 
     private void sortByComparator(E e) {
+
+//        Arrays.sort(queue, comparator);
+//        //refactor links
+//        clear();
+//        for (int i = 0; i < tmp.length; i++) {
+//            add((T)tmp[i]);
+//        }
     }
 
     private void sortNatural(E e) {
+
     }
 
 

@@ -11,7 +11,7 @@ public class ArrList <T> extends AbstractList<T>{
     private Object [] objects;
     /* pointer to last inserted object */
     private int index = 0;
-    /* initial capacity constant*/
+    /* initial capacity constant */
     private  static final int INITIAL_CAPACITY = 10;
     /* collection size */
     private int size = 0;
