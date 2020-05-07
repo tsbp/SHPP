@@ -2,9 +2,9 @@ package com.shpp.p2p.cs.bcimbal.assignment17;
 
 import java.util.*;
 
-
 /**
  * The class represent bad attempt of HashMap implementation
+ * Never use this class
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class HHashMap<K, V> extends AbstractMap<K, V> {
@@ -83,14 +83,14 @@ public class HHashMap<K, V> extends AbstractMap<K, V> {
      */
     @Override
     public Set<Entry<K, V>> entrySet() {
-        EEntry<K, V>[] e = new EEntry[size];
+        Entry<K, V>[] allEntries = new Entry[size];
         int index = 0;
         for (EEntry eEntry : hashTable) {
             if (eEntry != null) {
-                e[index++] = eEntry;
+                allEntries[index++] = eEntry;
                 EEntry tmp = eEntry;
                 while (tmp.next != null) {
-                    e[index++] = tmp.next;
+                    allEntries[index++] = tmp.next;
                     tmp = tmp.next;
                 }
             }
@@ -98,7 +98,7 @@ public class HHashMap<K, V> extends AbstractMap<K, V> {
         return new AbstractSet<Entry<K, V>>() {
             @Override
             public Iterator<Entry<K, V>> iterator() {
-                return new MyIterator<>(e);
+                return new MyIterator<>(allEntries);
             }
 
             @Override
@@ -126,9 +126,9 @@ public class HHashMap<K, V> extends AbstractMap<K, V> {
     @Override
     public V put(K key, V value) {
         EEntry<K, V> e = new EEntry(key, value, null);
-        addToEntryToTable(e, hashTable);
-
-        size++;
+        if(entryAddedToTable(e, hashTable)) {
+            size++;
+        }
         if (size >= hashTable.length) {
             hashTable = hashTableResize();
         }
@@ -162,25 +162,62 @@ public class HHashMap<K, V> extends AbstractMap<K, V> {
         size--;
         return value;
     }
+//    @Override
+//    public V remove(Object key) {
+//
+//        int index = getHash((K) key, hashTable.length);
+//        V value = get(key);
+//        EEntry tmp = hashTable[index];
+//
+//        if (Objects.equals(tmp.getKey(), key)) { // first in chain
+//            hashTable[index] = hashTable[index].next;
+//            size--;
+//            return value;
+//        } else {
+//            if(tmp == null) {
+//                return null;
+//            }
+//            do  {
+//                if(Objects.equals(tmp.getKey(), key)) {
+//                    size--;
+//                    return value;
+//                }
+//                tmp = tmp.next;
+//            }
+//            while (tmp != null);
+//
+//        }
+//        return null;
+//    }
 
     /*******************************************************************************************************************
      * Method to add entry to hash table
      * @param e entry to add
      * @param hTable destination hash table
+     * @return
      */
-    private void addToEntryToTable(EEntry<K, V> e, EEntry<K, V>[] hTable) {
+    private boolean entryAddedToTable(EEntry<K, V> e, EEntry<K, V>[] hTable) {
 
-        int index = getHash(e.getKey(), hTable.length);
+        int index = getHash(e.key, hTable.length);
 
         EEntry tmp = hTable[index];
-        if (tmp != null) {
-            while (tmp.next != null) {
+        if (tmp == null) {
+            hTable[index] = e;
+            return true;
+        }
+          else {
+            while (true) {
+                if (Objects.equals(e.key, tmp.key)) { // found same key
+                    tmp.setValue(e.getValue());
+                    return false;
+                }
+
+                if(tmp.next == null){
+                    tmp.next = e;
+                    return true;
+                }
                 tmp = tmp.next;
             }
-            tmp.next = e;
-
-        } else {
-            hTable[index] = e;
         }
     }
 
@@ -190,12 +227,12 @@ public class HHashMap<K, V> extends AbstractMap<K, V> {
      */
     private EEntry<K, V>[] hashTableResize() {
 
-        EEntry<K, V>[] newHashTable = new EEntry[hashTable.length * 2];
+        EEntry<K, V>[] newHashTable = new EEntry[hashTable.length * 2 - 1];
         for (Entry<K, V> e : entrySet()) {
             if (e != null) {
                 ((EEntry<K, V>) e).next = null; //clear links
-                    addToEntryToTable((EEntry<K, V>) e, newHashTable);
-                }
+                entryAddedToTable((EEntry<K, V>) e, newHashTable);
+            }
         }
         return newHashTable;
     }
@@ -207,8 +244,11 @@ public class HHashMap<K, V> extends AbstractMap<K, V> {
      * @return hashcode integer value
      */
     private int getHash(K key, int size) {
+        if(key == null) {
+            return 0;
+        }
         int hash = key.hashCode();
-        return Math.abs((hash / 3) % size);
+        return Math.abs((hash /*/ 3*/) % size);
     }
 
     /*******************************************************************************************************************
@@ -218,17 +258,8 @@ public class HHashMap<K, V> extends AbstractMap<K, V> {
      */
     @Override
     public boolean containsKey(Object key) {
-        int index = getHash((K) key, hashTable.length);
-        EEntry currentEntry = hashTable[index];
-        if (currentEntry == null) {
+        if(get(key) == null) {
             return false;
-        }
-
-        while (!currentEntry.getKey().equals(key)/* != key*/) {
-            if (currentEntry.next == null) {
-                return false;
-            }
-            currentEntry = currentEntry.next;
         }
         return true;
     }
@@ -246,8 +277,7 @@ public class HHashMap<K, V> extends AbstractMap<K, V> {
         if (currentEntry == null) {
             return null;
         }
-
-        while (!currentEntry.getKey().equals(key)) {
+        while (!Objects.equals(currentEntry.getKey(), key)) {
             if (currentEntry.next == null) {
                 return null;
             }
@@ -261,7 +291,7 @@ public class HHashMap<K, V> extends AbstractMap<K, V> {
      * @param <K> the type of keys
      * @param <V> the type of values
      */
-    static class EEntry<K, V> implements Map.Entry<K, V> {
+    static class EEntry<K, V> implements Entry<K, V>{
         K key;
         V value;
         EEntry next;
@@ -290,12 +320,14 @@ public class HHashMap<K, V> extends AbstractMap<K, V> {
 
         @Override
         public boolean equals(Object o) {
-            return false;
+            throw new NullPointerException("Ha-ha. Got you, equals!");
+            /*return false;*/
         }
 
         @Override
         public int hashCode() {
-            return 0;
+            throw new NullPointerException("Ha-ha. Got you, hasCode!");
+            /*return key.hashCode();*/
         }
     }
 
@@ -303,7 +335,7 @@ public class HHashMap<K, V> extends AbstractMap<K, V> {
      * Iterator
      * @param <T> iterator type
      */
-    static class MyIterator<T> implements Iterator<T> {
+    static class MyIterator<T> implements Iterator {
         int index = 0;
         int size;
         T[] array;
@@ -312,6 +344,11 @@ public class HHashMap<K, V> extends AbstractMap<K, V> {
             this.array = array;
             this.size = array.length;
         }
+
+//        @Override
+//        public void remove() {
+//
+//        }
 
         @Override
         public boolean hasNext() {
