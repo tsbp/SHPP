@@ -5,8 +5,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *  ExParser builds a sequence of simple operations
- *  for input expression
+ * ExParser builds a sequence of simple operations
+ * for input expression
  */
 public class ExParser {
     /* regular expression for parsing brackets */
@@ -60,17 +60,17 @@ public class ExParser {
             checkForMathCorrectness();
         }
 
-     }
+    }
 
     /*******************************************************************************************************************
      * Method to check mathematical correction
      * of parsed expression map
      */
     private void checkForMathCorrectness() {
-        for(String s: parsedExpr.values()) {
+        for (String s : parsedExpr.values()) {
             String a = s;
             a = a.replaceAll("[.0-9a-zA-Z#]+", "");
-            if(a.length() > 1) {
+            if (a.length() > 1) {
                 System.out.println("Error in expression: " + a);
                 valid = false;
             }

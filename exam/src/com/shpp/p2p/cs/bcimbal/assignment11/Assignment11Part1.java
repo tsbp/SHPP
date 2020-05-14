@@ -46,8 +46,7 @@ public class Assignment11Part1 {
                 } else {
                     System.out.println("Can't make calculations.");
                 }
-            }
-            catch (ArithmeticException aEx) {
+            } catch (ArithmeticException aEx) {
                 System.out.println("Division by zero.");
             }
             System.out.println("To calculate expression with your variables use coma as separator (a=23, abc=-23.5, a23c=58)");

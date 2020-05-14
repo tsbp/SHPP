@@ -17,7 +17,7 @@ class ExTree {
     public ExTree(String expression) {
         ExParser pExpression = new ExParser(expression);
         if (pExpression.isValid()) {
-           // System.out.println("map: " + pExpression.getMap());
+            // System.out.println("map: " + pExpression.getMap());
             root = createNode(("#0"), pExpression.getMap());
         }
     }

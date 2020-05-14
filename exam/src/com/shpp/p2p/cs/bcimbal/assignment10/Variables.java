@@ -11,7 +11,7 @@ public class Variables {
 
     /* Constructor */
     public Variables(String[] args) {
-            variables = parseVariables(args);
+        variables = parseVariables(args);
     }
 
     /*******************************************************************************************************************
@@ -39,10 +39,9 @@ public class Variables {
                 System.out.println("Can't parse argument " + args[i]);
             }
         }
-        if(vars.size() > 0) {
+        if (vars.size() > 0) {
             return vars;
-        }
-        else return null;
+        } else return null;
     }
 
 

@@ -27,53 +27,53 @@ class ExNode {
      * @param vars map of variables
      * @return Double result of mathematical operations (null if can't make)
      */
-    public Double getResult(HashMap<String, Double> vars) throws ArithmeticException{
+    public Double getResult(HashMap<String, Double> vars) throws ArithmeticException {
         //try {
-            switch (operator) {
-                case "+":
-                    return argument1.getResult(vars) + argument2.getResult(vars);
-                case "-":
-                    return argument1.getResult(vars) - argument2.getResult(vars);
-                case "*":
-                    return argument1.getResult(vars) * argument2.getResult(vars);
-                case "/":
-                    Double a2Result = argument2.getResult(vars);
-                    if(a2Result == 0) {
-                        throw new ArithmeticException();
-                    }
-                    return argument1.getResult(vars) / a2Result;
-                case "^":
-                    return Math.pow(argument1.getResult(vars), argument2.getResult(vars));
-                case "cos":
-                    return Math.cos(argument1.getResult(vars));
-                case "sin":
-                    return Math.sin(argument1.getResult(vars));
-                case "tan":
-                    return Math.tan(argument1.getResult(vars));
-                case "atan":
-                    return Math.atan(argument1.getResult(vars));
-                case "log10":
-                    return Math.log10(argument1.getResult(vars));
-                case "log2":
-                    return (Math.log10(argument1.getResult(vars)) / Math.log10(2));
-                case "sqrt":
-                    return Math.sqrt(argument1.getResult(vars));
-                default: {
-                    Double arg;
-                    try {
-                        arg = Double.parseDouble(operator);
-                    } catch (Exception e) {
-                        if (vars.containsKey(operator)) {
-                            arg = vars.get(operator);
-                            System.out.println(operator + " = " + arg);
-                        } else {
-                            System.out.println("Unknown type of " + operator + ".");
-                            arg = null;
-                        }
-                    }
-                    return arg;
+        switch (operator) {
+            case "+":
+                return argument1.getResult(vars) + argument2.getResult(vars);
+            case "-":
+                return argument1.getResult(vars) - argument2.getResult(vars);
+            case "*":
+                return argument1.getResult(vars) * argument2.getResult(vars);
+            case "/":
+                Double a2Result = argument2.getResult(vars);
+                if (a2Result == 0) {
+                    throw new ArithmeticException();
                 }
+                return argument1.getResult(vars) / a2Result;
+            case "^":
+                return Math.pow(argument1.getResult(vars), argument2.getResult(vars));
+            case "cos":
+                return Math.cos(argument1.getResult(vars));
+            case "sin":
+                return Math.sin(argument1.getResult(vars));
+            case "tan":
+                return Math.tan(argument1.getResult(vars));
+            case "atan":
+                return Math.atan(argument1.getResult(vars));
+            case "log10":
+                return Math.log10(argument1.getResult(vars));
+            case "log2":
+                return (Math.log10(argument1.getResult(vars)) / Math.log10(2));
+            case "sqrt":
+                return Math.sqrt(argument1.getResult(vars));
+            default: {
+                Double arg;
+                try {
+                    arg = Double.parseDouble(operator);
+                } catch (Exception e) {
+                    if (vars.containsKey(operator)) {
+                        arg = vars.get(operator);
+                        System.out.println(operator + " = " + arg);
+                    } else {
+                        System.out.println("Unknown type of " + operator + ".");
+                        arg = null;
+                    }
+                }
+                return arg;
             }
+        }
 //        } catch (Exception e) {
 //            //System.out.println("Can't make calculations.");
 //        }

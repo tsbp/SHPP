@@ -11,7 +11,7 @@ public class Variables {
 
     /* Constructor */
     public Variables(String[] args) {
-           parseVariables(args);
+        parseVariables(args);
     }
 
     /*******************************************************************************************************************
