@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PQueueTest {
 
-    private static  final int ITERATIONS_COUNT = 13;
+    private static  final int ITERATIONS_COUNT = 13000;
     PriorityQueue<Integer> actual;
     PQueue<Integer> expected;
 
