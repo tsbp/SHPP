@@ -6,9 +6,12 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
+//import java.util.ArrayList;
+//import java.util.HashMap;
+//import java.util.LinkedList;
+import com.shpp.p2p.cs.bcimbal.assignment16.ArrList;
+import com.shpp.p2p.cs.bcimbal.assignment17.HHashMap;
+import com.shpp.p2p.cs.bcimbal.assignment16.LinkList;
 
 /*******************************************************************************************************************
  * The class counts the number of silhouettes in the picture
@@ -45,10 +48,10 @@ public class Assignment13Part1 extends JFrame {
                 img = removeAlpha(img);
             }
             /* count silhouettes in original image*/
-            ArrayList<HashMap<Point, Integer>> silhouettes = getSilhouettes(img);
+            ArrList<HHashMap<Point, Integer>> silhouettes = getSilhouettes(img);
             System.out.print("Silhouettes count: " + silhouettes.size());
 
-            ArrayList<HashMap<Point, Integer>> contours = new ArrayList<>();
+            ArrList<HHashMap<Point, Integer>> contours = new ArrList<>();
             if(CONTOUR_DEPTH > 0) {
                 /* outline silhouettes (pseudo unsticking)*/
                 countourize(silhouettes, contours, CONTOUR_DEPTH);
@@ -93,13 +96,13 @@ public class Assignment13Part1 extends JFrame {
      * @param height output image height
      * @return BufferedImage image
      */
-    private static BufferedImage getImageFrom(ArrayList<HashMap<Point, Integer>> silhouettes, int width, int height) {
+    private static BufferedImage getImageFrom(ArrList<HHashMap<Point, Integer>> silhouettes, int width, int height) {
         BufferedImage tmpImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D gr = tmpImage.createGraphics();
 
         gr.setColor(Color.WHITE);
         gr.fillRect(0, 0, width, height);
-        for (HashMap<Point, Integer> silhouette : silhouettes) {
+        for (HHashMap<Point, Integer> silhouette : silhouettes) {
 
             for (Point p : silhouette.keySet()) {
                 gr.setColor(new Color(silhouette.get(p)));
@@ -134,8 +137,8 @@ public class Assignment13Part1 extends JFrame {
      * @param contours ArrayList of  contours
      * @param contourDepth int number of iterations of contourizing
      */
-    private static void countourize(ArrayList<HashMap<Point, Integer>> silhouettes,
-                                    ArrayList<HashMap<Point, Integer>> contours,
+    private static void countourize(ArrList<HHashMap<Point, Integer>> silhouettes,
+                                    ArrList<HHashMap<Point, Integer>> contours,
                                     int contourDepth) {
         for (int n = 0; n < contourDepth; n++) {
             boolean first = false;
@@ -145,7 +148,7 @@ public class Assignment13Part1 extends JFrame {
 
             for (int i = 0; i < silhouettes.size(); i++) {
                 if (first) {
-                    contours.add(getContour(silhouettes.get(i), new HashMap<>()));
+                    contours.add(getContour(silhouettes.get(i), new HHashMap<>()));
                 } else {
                     getContour(silhouettes.get(i), contours.get(i));
                 }
@@ -160,8 +163,8 @@ public class Assignment13Part1 extends JFrame {
      * @param contours ArrayList of  contours
      * @param silhouettes ArrayList of  silhouettes
      */
-    private static void substrate(ArrayList<HashMap<Point, Integer>> contours,
-                                  ArrayList<HashMap<Point, Integer>> silhouettes) {
+    private static void substrate(ArrList<HHashMap<Point, Integer>> contours,
+                                  ArrList<HHashMap<Point, Integer>> silhouettes) {
         for (int i = 0; i < contours.size(); i++) {
             for (Point p : contours.get(i).keySet()) {
                 silhouettes.get(i).remove(p);
@@ -176,8 +179,8 @@ public class Assignment13Part1 extends JFrame {
      * @param contr HashMap of contour
      * @return HashMap of contour
      */
-    private static HashMap<Point, Integer> getContour(HashMap<Point, Integer> silh,
-                                                      HashMap<Point, Integer> contr) {
+    private static HHashMap<Point, Integer> getContour(HHashMap<Point, Integer> silh,
+                                                      HHashMap<Point, Integer> contr) {
         for (Point pix : silh.keySet()) {
             for (int[] matrix : searchMatrix) {
                 if (!silh.containsKey(new Point(pix.x + matrix[0], pix.y + matrix[1]))) {
@@ -196,8 +199,8 @@ public class Assignment13Part1 extends JFrame {
      * @param img BufferedImage input image object
      * @return int silhouettes number
      */
-    private static ArrayList<HashMap<Point, Integer>> getSilhouettes(BufferedImage img) {
-        ArrayList<HashMap<Point, Integer>> tmpSilhouettes = new ArrayList<>();
+    private static ArrList<HHashMap<Point, Integer>> getSilhouettes(BufferedImage img) {
+        ArrList<HHashMap<Point, Integer>> tmpSilhouettes = new ArrList<>();
         /* define as background luminance at bottom right pixel */
         int bgColor = img.getRGB(img.getWidth() - 1, img.getHeight() - 1);
         int minSilhSize = getMinSilhouetteSize(img.getWidth(), img.getHeight());
@@ -208,7 +211,7 @@ public class Assignment13Part1 extends JFrame {
                 double pixLumi = getLuminance(img.getRGB(x, y));
                 if (!isLuminancesEqual(pixLumi, getLuminance(bgColor)) && !belongsTo(x, y, tmpSilhouettes)) {
                     /* found a pixel with luminance not equal background */
-                    HashMap<Point, Integer> silhouette = discoverSilhouette(img, bgColor, x, y);
+                    HHashMap<Point, Integer> silhouette = discoverSilhouette(img, bgColor, x, y);
                     if (silhouette.size() >= minSilhSize) {
                         tmpSilhouettes.add(silhouette);
                     }
@@ -240,13 +243,13 @@ public class Assignment13Part1 extends JFrame {
      * @param yC int y coordinate of current pixel
      * @return HashMap of discovered silhouette
      */
-    private static HashMap<Point, Integer> discoverSilhouette(BufferedImage image, int bgColor, int xC, int yC) {
-        HashMap<Point, Integer> silhouetteMap = new HashMap<>();
+    private static HHashMap<Point, Integer> discoverSilhouette(BufferedImage image, int bgColor, int xC, int yC) {
+        HHashMap<Point, Integer> silhouetteMap = new HHashMap<>();
         silhouetteMap.put(new Point(xC, yC), image.getRGB(xC, yC));
         double bgLumi = getLuminance(bgColor);
 
         /* breadth-first search, BFS */
-        LinkedList<Point> queue = new LinkedList<>();
+        LinkList<Point> queue = new LinkList<>();
         queue.add(new Point(xC, yC));
         while (queue.size() > 0) {
             Point currentPixel = queue.poll();
@@ -301,8 +304,8 @@ public class Assignment13Part1 extends JFrame {
      * @param silhouettes ArrayList of discovered silhouettes
      * @return boolean true, if pixel belongs to silhouette
      */
-    private static boolean belongsTo(int x, int y, ArrayList<HashMap<Point, Integer>> silhouettes) {
-        for (HashMap<Point, Integer> silhouette : silhouettes) {
+    private static boolean belongsTo(int x, int y, ArrList<HHashMap<Point, Integer>> silhouettes) {
+        for (HHashMap<Point, Integer> silhouette : silhouettes) {
             if (silhouette.containsKey(new Point(x, y))) {
                 return true;
             }
@@ -336,15 +339,15 @@ public class Assignment13Part1 extends JFrame {
      * @param map2 list of images maps
      */
     private static void showDiscovered(int width, int height,
-                                       ArrayList<HashMap<Point, Integer>> map1,
-                                       ArrayList<HashMap<Point, Integer>> map2) {
+                                       ArrList<HHashMap<Point, Integer>> map1,
+                                       ArrList<HHashMap<Point, Integer>> map2) {
         BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics gr = bi.createGraphics();
 
         gr.setColor(Color.WHITE);
         gr.fillRect(0, 0, width, height);
 
-        for (HashMap<Point, Integer> silhouette : map1) {
+        for (HHashMap<Point, Integer> silhouette : map1) {
             gr.setColor(new Color((int) (Math.random() * 0x1000000)));
 
             for (Point p : silhouette.keySet()) {
@@ -381,7 +384,7 @@ public class Assignment13Part1 extends JFrame {
      * @param map image map
      * @return Point center point
      */
-    private static Point getCenterPoint(HashMap<Point, Integer> map) {
+    private static Point getCenterPoint(HHashMap<Point, Integer> map) {
         int maxx = 0;
         int maxy = 0;
         int minx = 100000;

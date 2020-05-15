@@ -14,27 +14,24 @@ public class LinkList<T> extends AbstractSequentialList<T> {
      * Method to get first node of list
      * @return first node of list
      */
-    //todo
-//    public LLNode<T> getFirst() {
-//        return first;
-//    }
+
     public T getFirst() {
         return first.data;
     }
 
 
-    /*******************************************************************************************************************
-     * get object on input list node
-     *
-     * @param node input node
-     * @return node object
-     */
-    public T getNodeData(LLNode<T> node) {
-        if (node != null) {
-            return node.data;
-        }
-        return null;
-    }
+//    /*******************************************************************************************************************
+//     * get object on input list node
+//     *
+//     * @param node input node
+//     * @return node object
+//     */
+//    public T getNodeData(LLNode<T> node) {
+//        if (node != null) {
+//            return node.data;
+//        }
+//        return null;
+//    }
 
     /*******************************************************************************************************************
      * Method to remove node at index
@@ -183,10 +180,7 @@ public class LinkList<T> extends AbstractSequentialList<T> {
     //todo changed
     public void addFirst(T data) {
         LLNode<T> tmpFirst = first;
-
-        //       first.previous = first;
         first = new LLNode<T>(data, null, tmpFirst);
-//        first.next.previous
         if (first.next != null)
             first.next.previous = first;
         size++;
@@ -226,90 +220,33 @@ public class LinkList<T> extends AbstractSequentialList<T> {
      */
     @Override
     public ListIterator<T> listIterator(int index) {
-        Object[] tmp = toArray();
-//        for (int i = 0; i < size; i++) {
-//            tmp[i] = get(i);
-//        }
-        List list = Arrays.asList(tmp);
+        T[] tmp = (T[])toArray();
+        List<T> list = Arrays.asList(tmp);
         return list.listIterator();
     }
 
     //todo added
     @Override
     public void sort(Comparator<? super T> c) {
-        Object[] tmp = toArray();
-        Arrays.sort(tmp, (Comparator) c);
+        T[] items = (T[])toArray();
+        Arrays.sort(items, c);
         //refactor links
         clear();
-        for (int i = 0; i < tmp.length; i++) {
-            add((T)tmp[i]);
+        for (T item : items) {
+            add(item);
         }
-//        System.out.println();
     }
 
-//    @Override
-//    public ListIterator<T> listIterator() {
-//        //return super.listIterator();
-//        return new ListIterator<T>() {
-//            LLNode current = first;
-//
-//            @Override
-//            public boolean hasNext() {
-//                return current.next == null;
-//            }
-//
-//            @Override
-//            public T next() {
-//                return (T) current.next;
-//            }
-//
-//            @Override
-//            public boolean hasPrevious() {
-//                return current.previous == null;
-//            }
-//
-//            @Override
-//            public T previous() {
-//                return (T) current.previous;
-//            }
-//
-//            @Override
-//            public int nextIndex() {
-//                return 0;
-//            }
-//
-//            @Override
-//            public int previousIndex() {
-//                return 0;
-//            }
-//
-//            @Override
-//            public void remove() {
-//
-//            }
-//
-//            @Override
-//            public void set(T t) {
-//
-//            }
-//
-//            @Override
-//            public void add(T t) {
-//
-//            }
-//        };
-//    }
+
 
     //todo added
+
+    /*******************************************************************************************************************
+     *
+     * @return
+     */
     @Override
     public Object[] toArray() {
-//        LLNode<T> [] ret = (LLNode<T> [])new Object[size];
-//        LLNode<T> current = first;
-//        int index = 0;
-//        while (current.next != null){
-//            ret[index++] = current;
-//            current = current.next;
-//        }
         Object[] ret = new Object[size];
         for (int i = 0; i < size; i++) {
             ret[i] = get(i);
@@ -318,9 +255,14 @@ public class LinkList<T> extends AbstractSequentialList<T> {
     }
 
     //todo added
+
+    /*******************************************************************************************************************
+     *
+     * @return
+     */
+    @Override
     public Object clone() {
         return this;
-        //return super.clone();
     }
 
     /*******************************************************************************************************************

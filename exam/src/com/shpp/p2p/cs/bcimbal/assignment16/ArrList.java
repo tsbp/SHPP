@@ -1,7 +1,6 @@
 package com.shpp.p2p.cs.bcimbal.assignment16;
 
 import java.util.*;
-import java.util.List;
 
 /* Class represent bad attempt of ArrayList implementation */
 

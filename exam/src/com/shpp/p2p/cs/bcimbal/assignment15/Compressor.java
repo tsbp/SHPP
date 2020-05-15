@@ -1,7 +1,9 @@
 package com.shpp.p2p.cs.bcimbal.assignment15;
 
+import com.shpp.p2p.cs.bcimbal.assignment16.LinkList;
+
 import java.io.*;
-import java.util.LinkedList;
+//import java.util.LinkedList;
 
 /* Class makes file compression/decompression by Huffman codding */
 public class Compressor extends CHelper {
@@ -123,7 +125,7 @@ public class Compressor extends CHelper {
         int bytesProceeded = 0;
         int inBytesCount;
         int outBytesCount = 0;
-        LinkedList<Boolean> byteSeparator = new LinkedList<>();
+        LinkList<Boolean> byteSeparator = new LinkList<>();
         while ((inBytesCount = streamIn.read(inputBuffer, 0, IO_BUFFER_SIZE)) > 0) {
             for (int currentByte = 0; currentByte < inBytesCount; currentByte++) {
                 bytesProceeded++;
@@ -166,7 +168,7 @@ public class Compressor extends CHelper {
      * @param bitsCount bits number in symbol code
      * @return restored byte
      */
-    private static byte getByte(LinkedList<Boolean> byteSeparator, int bitsCount) {
+    private static byte getByte(LinkList<Boolean> byteSeparator, int bitsCount) {
         byte cByte = 0;
         for (int k = 0; k < bitsCount; k++) {
             if (byteSeparator.getFirst()) {

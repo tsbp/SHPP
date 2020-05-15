@@ -1,13 +1,15 @@
 package com.shpp.p2p.cs.bcimbal.assignment11;
 
-import java.util.HashMap;
+import com.shpp.p2p.cs.bcimbal.assignment17.HHashMap;
+
+//import java.util.HashMap;
 
 /* Class Variables makes parsing input array of string to map of variable values*/
 
 public class Variables {
 
     /*  Map of variables values*/
-    private static HashMap<String, Double> variables = new HashMap<>();
+    private static HHashMap<String, Double> variables = new HHashMap<>();
 
     /* Constructor */
     public Variables(String[] args) {
@@ -18,7 +20,7 @@ public class Variables {
      *
      * @return parsed map of variables values
      */
-    public HashMap<String, Double> getVariables() {
+    public HHashMap<String, Double> getVariables() {
         return variables;
     }
 

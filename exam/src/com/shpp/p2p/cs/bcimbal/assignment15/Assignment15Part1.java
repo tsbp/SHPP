@@ -15,7 +15,6 @@ public class Assignment15Part1 extends CHelper {
 
         if (args.length > 0) {
             switch (args[0]) {
-
                 case "-a":
                     getFileNames(args, EXTENSION_ARCH);
                     new Compressor(fileIn, fileOut, COMPRESSOR_MODE_COMPRESS);

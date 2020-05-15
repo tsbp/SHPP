@@ -1,6 +1,7 @@
 package com.shpp.p2p.cs.bcimbal.assignment11;
 
-import java.util.HashMap;
+//import java.util.HashMap;
+import com.shpp.p2p.cs.bcimbal.assignment17.HHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,7 +22,7 @@ public class ExParser {
     private static final String REX_PLUSMINUS = "\\#?[.0-9a-zA-Z#]+(\\+|\\-)#?[.0-9a-zA-Z#]+";
 
     /* A sequence of simple operations of parsed expression*/
-    private HashMap<String, String> parsedExpr = new HashMap<>();
+    private HHashMap<String, String> parsedExpr = new HHashMap<>();
     /* a deep of parsing */
     private int deep = 0;
     /* validity of expression */
@@ -80,7 +81,7 @@ public class ExParser {
     /*******************************************************************************************************************     *
      * @return HashMap sequence of simple operations
      */
-    public HashMap<String, String> getMap() {
+    public HHashMap<String, String> getMap() {
         return parsedExpr;
     }
 

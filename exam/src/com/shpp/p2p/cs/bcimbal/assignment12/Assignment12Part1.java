@@ -5,12 +5,15 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+//import java.util.ArrayList;
+import com.shpp.p2p.cs.bcimbal.assignment16.ArrList;
+//import java.util.HashMap;
+import com.shpp.p2p.cs.bcimbal.assignment17.HHashMap;
+
 
 public class Assignment12Part1 {
 
-    private static ArrayList<HashMap<Point, Boolean>> silhouettes = new ArrayList<>();
+    private static ArrList<HHashMap<Point, Boolean>> silhouettes = new ArrList<>();
 
     private static final double LUMINANCE_THRESHOLD = 50;
     private static final double MIN_SILHOUETTE_SIZE = 100;
@@ -56,7 +59,7 @@ public class Assignment12Part1 {
                 double currrentLumi = getLuminance(img.getRGB(x, y));
                 if ((bgLuminance > currrentLumi + LUMINANCE_THRESHOLD) && !belongsTo(x, y, silhouettes)) {
                     /* found a pixel with luminance less than background */
-                    HashMap<Point, Boolean> silhouette = discoverSilhouette(img, bgLuminance, x, y);
+                    HHashMap<Point, Boolean> silhouette = discoverSilhouette(img, bgLuminance, x, y);
                     if (silhouette.size() >= MIN_SILHOUETTE_SIZE)
                         silhouettes.add(silhouette);
                 }
@@ -74,8 +77,8 @@ public class Assignment12Part1 {
      * @param y int y coordinate of current pixel
      * @return HashMap of discovered silhouette
      */
-    private static HashMap<Point, Boolean> discoverSilhouette(BufferedImage image, double bgLuminance, int x, int y) {
-        HashMap<Point, Boolean> silhouetteMap = new HashMap<>();
+    private static HHashMap<Point, Boolean> discoverSilhouette(BufferedImage image, double bgLuminance, int x, int y) {
+        HHashMap<Point, Boolean> silhouetteMap = new HHashMap<>();
         dfs(x, y, image, bgLuminance, silhouetteMap);
         return silhouetteMap;
     }
@@ -85,8 +88,7 @@ public class Assignment12Part1 {
 
     /*******************************************************************************************************************
      * Deep first search
-     *
-     * @param coordX int x coordinate of current pixel
+     *  @param coordX int x coordinate of current pixel
      * @param coordY int y coordinate of current pixel
      * @param image BufferedImage input image object
      * @param bgLuminance int background luminance
@@ -94,7 +96,7 @@ public class Assignment12Part1 {
      */
     private static void dfs(int coordX, int coordY,
                             BufferedImage image, double bgLuminance,
-                            HashMap<Point, Boolean> map) {
+                            HHashMap<Point, Boolean> map) {
         map.put(new Point(coordX, coordY), true);
         /* search not discovered pixels around current pixel*/
         for (int[] matrix : searchMatrix) {
@@ -131,8 +133,8 @@ public class Assignment12Part1 {
      * @param silhouettes ArrayList of discovered silhouettes
      * @return boolean true, if pixel belongs to silhouette
      */
-    private static boolean belongsTo(int x, int y, ArrayList<HashMap<Point, Boolean>> silhouettes) {
-        for (HashMap<Point, Boolean> silhouette : silhouettes) {
+    private static boolean belongsTo(int x, int y, ArrList<HHashMap<Point, Boolean>> silhouettes) {
+        for (HHashMap<Point, Boolean> silhouette : silhouettes) {
             if (silhouette.containsKey(new Point(x, y))) {
                 return true;
             }

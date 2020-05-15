@@ -16,6 +16,8 @@ class HHashMapTest {
     void setup() {
         actual = new HashMap<>();
         expected = new HHashMap<>();
+        actual.put(null, "v_null");
+        expected.put(null, "v_null");
         for(int i = 0; i < ITERATIONS_COUNT; i++){
             String key = "key_" + i;
             String value = "value_" + i;
@@ -26,43 +28,48 @@ class HHashMapTest {
 
     @Test
     void keySet() {
-        Set sActual = actual.keySet();
-        Set sExpected = expected.keySet();
+        Set<String> sActual = actual.keySet();
+        Set<String> sExpected = expected.keySet();
 
         Assert.assertTrue(sActual.containsAll(sExpected));
     }
 
     @Test
     void values() {
-        Collection cActual = actual.values();
-        Collection cExpected = expected.values();
+        Collection<String> cActual = actual.values();
+        Collection<String> cExpected = expected.values();
         Assert.assertTrue(cActual.containsAll(cExpected));
     }
 
     @Test
     void entrySet() {
-        Set sActual = actual.entrySet();
-        Set sExpected = expected.entrySet();
+        Set<Map.Entry<String, String>> sActual = actual.entrySet();
+        Set<Map.Entry<String, String>> sExpected = expected.entrySet();
 
         Assert.assertTrue(sActual.containsAll(sExpected));
     }
 
     @Test
     void size() {
-        Assert.assertTrue(expected.size() == actual.size());
+        Assert.assertEquals(expected.size(), actual.size());
     }
 
     @Test
     void put() {
         entrySet();
+        // put existing key
+        expected.put("key_0", "value changed");
+        Assert.assertEquals(expected.get("key_0"), "value changed");
     }
 
     @Test
     void remove() {
+        Assert.assertEquals(expected.remove("not present key"), null);
         Object [] keyArray = actual.keySet().toArray();
         for(int i = 0; i < ITERATIONS_COUNT; i += 2) {
+            Assert.assertTrue(expected.containsKey(keyArray[i]));
             expected.remove(keyArray[i]);
-            Assert.assertFalse(expected.containsKey(keyArray[i]));
+            Assert.assertEquals(expected.get(keyArray[i]), null);
         }
     }
 

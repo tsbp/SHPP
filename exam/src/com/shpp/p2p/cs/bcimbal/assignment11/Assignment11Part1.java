@@ -1,6 +1,8 @@
 package com.shpp.p2p.cs.bcimbal.assignment11;
 
-import java.util.HashMap;
+//import java.util.HashMap;
+import com.shpp.p2p.cs.bcimbal.assignment17.HHashMap;
+
 import java.util.Scanner;
 
 /**
@@ -39,7 +41,7 @@ public class Assignment11Part1 {
         Scanner sc = new Scanner(System.in);
         while (true) {
             try {
-                HashMap<String, Double> v = vars.getVariables();
+                HHashMap<String, Double> v = vars.getVariables();
                 Double result = tree.getResult(v);
                 if (result != null) {
                     System.out.println("Result: " + result);
@@ -47,7 +49,10 @@ public class Assignment11Part1 {
                     System.out.println("Can't make calculations.");
                 }
             } catch (ArithmeticException aEx) {
-                System.out.println("Division by zero.");
+                System.out.println(aEx.getMessage()/*"Division by zero."*/);
+            }
+            catch (NullPointerException npe) {
+                System.out.println("Can't make calculations.");
             }
             System.out.println("To calculate expression with your variables use coma as separator (a=23, abc=-23.5, a23c=58)");
             vars = new Variables(("," + sc.nextLine()).split(","));

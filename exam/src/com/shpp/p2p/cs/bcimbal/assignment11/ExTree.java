@@ -1,6 +1,7 @@
 package com.shpp.p2p.cs.bcimbal.assignment11;
 
-import java.util.HashMap;
+//import java.util.HashMap;
+import com.shpp.p2p.cs.bcimbal.assignment17.HHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,8 +29,8 @@ class ExTree {
      * @param map HashMap of rules to build tree
      * @return ExNode node
      */
-    private ExNode createNode(String root, HashMap<String, String> map) {
-        HashMap<String, String> nInfo;
+    private ExNode createNode(String root, HHashMap<String, String> map) {
+        HHashMap<String, String> nInfo;
         ExNode node = null;
         if (root != null) {
             if (root.charAt(0) == '#') nInfo = getNodeInfo(map.get(root));
@@ -47,8 +48,8 @@ class ExTree {
      * @param input String text representation of node info
      * @return HashMap node info
      */
-    private HashMap<String, String> getNodeInfo(String input) {
-        HashMap<String, String> tmp = new HashMap<>();
+    private HHashMap<String, String> getNodeInfo(String input) {
+        HHashMap<String, String> tmp = new HHashMap<>();
         /* mark negative value*/
         if (input.charAt(0) == '-')
             input = input.replaceFirst("-", "!");
@@ -100,7 +101,7 @@ class ExTree {
      * @param vars HashMap of parsed variables for expression
      * @return Double result (null if can't calculate)
      */
-    public Double getResult(HashMap<String, Double> vars) {
+    public Double getResult(HHashMap<String, Double> vars) {
         return root.getResult(vars);
     }
 }

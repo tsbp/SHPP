@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PQueueTest {
 
-    private static  final int ITERATIONS_COUNT = 13000;
+    private static  final int ITERATIONS_COUNT = 13;
     PriorityQueue<Integer> actual;
     PQueue<Integer> expected;
 
@@ -34,7 +34,7 @@ class PQueueTest {
         setup();
         Object [] eArray =  expected.toArray();
         for(int i = 0; i < ITERATIONS_COUNT; i++) {
-            Assert.assertEquals(expected.poll(), actual.poll());
+            Assert.assertTrue(eArray[i] == actual.poll());
         }
     }
 
@@ -53,7 +53,7 @@ class PQueueTest {
     @Test
     void poll() {
         for(int i = 0; i < ITERATIONS_COUNT; i++) {
-            Assert.assertEquals(expected.poll(), actual.poll());
+            Assert.assertTrue(expected.poll() == actual.poll());
         }
     }
 

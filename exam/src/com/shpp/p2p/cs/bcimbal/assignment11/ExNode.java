@@ -1,6 +1,7 @@
 package com.shpp.p2p.cs.bcimbal.assignment11;
 
-import java.util.HashMap;
+//import java.util.HashMap;
+import com.shpp.p2p.cs.bcimbal.assignment17.HHashMap;
 
 /*******************************************************************************************************************
  * Class for node of simple math expression "argument1 operator argument2" (a+b etc.)
@@ -27,7 +28,7 @@ class ExNode {
      * @param vars map of variables
      * @return Double result of mathematical operations (null if can't make)
      */
-    public Double getResult(HashMap<String, Double> vars) throws ArithmeticException {
+    public Double getResult(HHashMap<String, Double> vars)  {
         //try {
         switch (operator) {
             case "+":
@@ -39,7 +40,7 @@ class ExNode {
             case "/":
                 Double a2Result = argument2.getResult(vars);
                 if (a2Result == 0) {
-                    throw new ArithmeticException();
+                    throw new ArithmeticException("Division by zero.");
                 }
                 return argument1.getResult(vars) / a2Result;
             case "^":
@@ -74,9 +75,5 @@ class ExNode {
                 return arg;
             }
         }
-//        } catch (Exception e) {
-//            //System.out.println("Can't make calculations.");
-//        }
-//        return  null;
     }
 }
