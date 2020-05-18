@@ -72,7 +72,7 @@ public class QQueue<E> extends LinkList<E> implements Queue<E> {
         if(!isEmpty()) {
             return peek();
         }
-        else throw new NoSuchElementException("queue is empty");
+        else throw new NoSuchElementException();
     }
 
     /*******************************************************************************************************************
@@ -90,12 +90,3 @@ public class QQueue<E> extends LinkList<E> implements Queue<E> {
     }
 }
 
-///***********************************************************************************************************************
-// * No Such Element Exception class
-// * for exception to be thrown by QQueue class methods
-// */
-// class NoSuchElementException extends RuntimeException {
-//    public NoSuchElementException(String errorMsg) {
-//        super(errorMsg);
-//    }
-//}

@@ -31,12 +31,18 @@ class ArrListTest {
     }
 
 
+    /*******************************************************************************************************************
+     * add() method test
+     */
     @Test
     void add() {
         Assert.assertEquals (expected, actual);
     }
 
 
+    /*******************************************************************************************************************
+     * set() method test
+     */
     @Test
     void set() {
         /* change values of items from 5 to 10 */
@@ -48,6 +54,9 @@ class ArrListTest {
         Assert.assertEquals (expected, actual);
     }
 
+    /*******************************************************************************************************************
+     * remove() method test
+     */
     @Test
     void remove() {
         /* remove item at tail */
@@ -65,6 +74,9 @@ class ArrListTest {
         Assert.assertEquals (expected, actual);
     }
 
+    /*******************************************************************************************************************
+     * iterator() method test
+     */
     @Test
     void iterator() {
         List <String> expected2 = new ArrayList<>();
@@ -74,7 +86,9 @@ class ArrListTest {
         Assert.assertEquals (expected2, actual);
     }
 
-    /* get() method test */
+    /*******************************************************************************************************************
+     * get() method test
+     */
     @Test
     void get() {
         ArrList<String> exp = new ArrList<>();
@@ -84,6 +98,9 @@ class ArrListTest {
         Assert.assertEquals (exp, actual);
     }
 
+    /*******************************************************************************************************************
+     * size() method test
+     */
     @Test
     void size() {
         Assert.assertEquals (expected.size(), actual.size());

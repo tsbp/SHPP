@@ -4,11 +4,9 @@ import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 /* The class to perform tests of LinkList class methods*/
 
 class LinkListTest {
@@ -33,11 +31,17 @@ class LinkListTest {
         }
     }
 
+    /*******************************************************************************************************************
+     * add() method test
+     */
     @Test
     void add() {
         Assert.assertEquals (expected, actual);
     }
 
+    /*******************************************************************************************************************
+     * add(index, value) method test
+     */
     @Test
     void testAddInner() {
         String str = "inserted";
@@ -46,15 +50,21 @@ class LinkListTest {
         Assert.assertEquals (expected, actual);
     }
 
+    /*******************************************************************************************************************
+     * get() method test
+     */
     @Test
     void get() {
-        LinkedList<String> exp = new LinkedList<>();
-        for (String s : expected) {
-            exp.add(s);
+        actual.clear();
+        for (int i = 0; i < expected.size(); i++) {
+            actual.add(expected.get(i));
         }
-        Assert.assertEquals (exp, actual);
+        Assert.assertEquals (expected, actual);
     }
 
+    /*******************************************************************************************************************
+     * addFirst() and addLast() methods test
+     */
     @Test
     void addFirstLast() {
         String str = "last";
@@ -68,6 +78,9 @@ class LinkListTest {
         Assert.assertEquals (expected, actual);
     }
 
+    /*******************************************************************************************************************
+     * listIterator() method test
+     */
     @Test
     void listIterator() {
         List <String> expected2 = new LinkedList<>();
@@ -82,6 +95,9 @@ class LinkListTest {
         Assert.assertEquals (expected.size(), actual.size());
     }
 
+    /*******************************************************************************************************************
+     * set() method test
+     */
     @Test
     void set() {
         String str = "replaced";
@@ -90,6 +106,9 @@ class LinkListTest {
         Assert.assertEquals (expected, actual);
     }
 
+    /*******************************************************************************************************************
+     * clear() method test
+     */
     @Test
     void clear() {
         expected.clear();
@@ -97,6 +116,9 @@ class LinkListTest {
         Assert.assertEquals (expected, actual);
     }
 
+    /*******************************************************************************************************************
+     * remove() method test
+     */
     @Test
     void remove() {
         /* remove item at tail */

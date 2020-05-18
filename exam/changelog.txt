@@ -7,7 +7,7 @@ Classes for exam are in package com.shpp.p2p.cs.bcimbal*
  - Expression - not changed
  - Variables - not changed
 
-2. Assignment 11 - transfered to self developed collections
+2. Assignment 11 - changed imports to self developed collections
  - Assignment11Part1
         - class assignment added
         - no arguments edge case implemented
@@ -20,12 +20,12 @@ Classes for exam are in package com.shpp.p2p.cs.bcimbal*
 3. Assignment 12
  - Assignment12Part1 - not changed
 
-4. Assignment 13 - transfered to self developed collections
+4. Assignment 13 - changed imports  to self developed collections
  - Assignment13Part1 -inheritance of JFrame removed as unused
 
 5. Assignment14 - no class is changed
 
-6. Assignment 15  - transfered to self developed collections,  no class is modified
+6. Assignment 15  - changed imports to self developed collections,  no class is modified
 
 7. Assignment 16
  - Assignment16Part1 :D

@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Stack;
 
-/* The class to perform tests of SStack class methods*/
+/***********************************************************************************************************************
+ *  The class to perform tests of SStack class methods
+ */
 class SStackTest {
 
     /* Tested collection */
@@ -16,7 +18,9 @@ class SStackTest {
 
     private static int COLLECTION_ITEMS_COUNT = 3000;
 
-    /* Fill both collections before executing each test*/
+    /*******************************************************************************************************************
+     *  Fill both collections before executing each test
+     */
     @BeforeEach
     void setup() {
         expected =  new SStack<>();
@@ -29,6 +33,9 @@ class SStackTest {
         }
     }
 
+    /*******************************************************************************************************************
+     * pop() and empty() methods test
+     */
     @Test
     void pop_empty() {
         for(int i = 0; i < COLLECTION_ITEMS_COUNT; i++) {
@@ -39,6 +46,9 @@ class SStackTest {
         Assert.assertEquals (expected, actual);
     }
 
+    /*******************************************************************************************************************
+     * peek() method test
+     */
     @Test
     void peek() {
         String actIndex = actual.peek();
@@ -46,11 +56,17 @@ class SStackTest {
         Assert.assertEquals (expIndex, actIndex);
     }
 
+    /*******************************************************************************************************************
+     * push() method test
+     */
     @Test
     void push() {
         Assert.assertEquals (expected, actual);
     }
 
+    /*******************************************************************************************************************
+     * search() method test
+     */
     @Test
     void search() {
         int actIndex = actual.search("test_19");
