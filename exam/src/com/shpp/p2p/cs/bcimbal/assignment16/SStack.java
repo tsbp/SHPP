@@ -7,12 +7,6 @@ import java.util.Vector;
 
 public class SStack <E> extends Vector<E> {
 
-    /**
-     * Constructor
-     */
-    SStack () {
-
-    }
 
     /*******************************************************************************************************************
      * Check if stack is empty

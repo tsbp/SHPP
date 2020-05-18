@@ -35,17 +35,23 @@ Classes for exam are in package com.shpp.p2p.cs.bcimbal*
        - unnecessary (as default) constructor removed
        - unnecessary method getNodeData(LLNode<T> node) removed
        - addFirst(T data) method improved
-       - listIterator(int index) improved
+       - listIterator(int index) method improved
        - sort(Comparator<? super T> c), toArray() and sort() methods are implemented (for assignment 17)
        - class LLNode<T> set as inner
  - LinkListTest - not modified
- - QQueue
- - QQueueTest
- - SStack
- - SStackTest
+ - QQueue  - not modified
+ - QQueueTest  - not modified
+ - SStack - unnecessary (as default) constructor removed
+ - SStackTest - not modified
 
 8. Assignment 17
- - Assignment17Part1 :D
- - HHashMapTest
- - PQueue
- - PQueueTest
+ - HHashMap
+      - put(K key, V value) added existing key control (value replacing)
+      - remove(Object key) improved
+      - addToEntryToTable(EEntry<K, V> e, EEntry<K, V>[] hTable) improved
+      - getHash(K key, int size) null key support added
+      - containsKey(Object key) improved
+      - get(Object key) - objects comparision improved
+ - HHashMapTest - null key added to tests
+ - PQueue - not changed
+ - PQueueTest - not changed
