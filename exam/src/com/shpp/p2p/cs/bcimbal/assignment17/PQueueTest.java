@@ -4,12 +4,8 @@ import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Random;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class PQueueTest {
 
@@ -34,31 +30,31 @@ class PQueueTest {
         setup();
         Object [] eArray =  expected.toArray();
         for(int i = 0; i < ITERATIONS_COUNT; i++) {
-            Assert.assertTrue(eArray[i] == actual.poll());
+            Assert.assertEquals(eArray[i], actual.poll());
         }
     }
 
     @Test
     void size() {
-        Assert.assertTrue(expected.size() == actual.size());
+        Assert.assertEquals(expected.size(), actual.size());
     }
 
     @Test
     void offer() {
         expected = new PQueue<>(1);
-        Assert.assertTrue(expected.offer(23));
-        Assert.assertFalse(expected.offer(23));
+        Assert.assertTrue(expected.offer(ITERATIONS_COUNT / 2));
+        Assert.assertFalse(expected.offer(ITERATIONS_COUNT / 2));
     }
 
     @Test
     void poll() {
         for(int i = 0; i < ITERATIONS_COUNT; i++) {
-            Assert.assertTrue(expected.poll() == actual.poll());
+            Assert.assertEquals(expected.poll(), actual.poll());
         }
     }
 
     @Test
     void peek() {
-        Assert.assertTrue(expected.peek() == actual.peek());
+        Assert.assertEquals(expected.peek(), actual.peek());
     }
 }

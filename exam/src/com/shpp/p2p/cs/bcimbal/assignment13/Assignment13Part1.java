@@ -18,7 +18,7 @@ import com.shpp.p2p.cs.bcimbal.assignment16.LinkList;
  * by the method "breadth-first search, BFS" without recursion
  */
 
-public class Assignment13Part1 extends JFrame {
+public class Assignment13Part1 {
 
     /* The threshold of luminance between silhouettes and background*/
     private static final double LUMINANCE_THRESHOLD = 20;

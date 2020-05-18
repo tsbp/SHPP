@@ -14,24 +14,9 @@ public class LinkList<T> extends AbstractSequentialList<T> {
      * Method to get first node of list
      * @return first node of list
      */
-
     public T getFirst() {
         return first.data;
     }
-
-
-//    /*******************************************************************************************************************
-//     * get object on input list node
-//     *
-//     * @param node input node
-//     * @return node object
-//     */
-//    public T getNodeData(LLNode<T> node) {
-//        if (node != null) {
-//            return node.data;
-//        }
-//        return null;
-//    }
 
     /*******************************************************************************************************************
      * Method to remove node at index
